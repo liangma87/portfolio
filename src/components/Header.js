@@ -29,7 +29,7 @@ class Header extends Component {
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="mr-auto text-left" navbar>
               <NavItem>
-                  <NavLink href="#">Portfolio</NavLink>
+                  <NavLink href="#" active>Portfolio</NavLink>
               </NavItem>
               <NavItem>
                   <NavLink href="#">Ideas</NavLink>

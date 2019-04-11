@@ -13,6 +13,7 @@ class ChartComponent extends React.Component {
       return <div>Loading...</div>
     }
     return (
+      /*<CandleStickChart type={"hybrid"} data={this.state.data} width={1024} />*/
       <CandleStickChart type={"hybrid"} data={this.state.data} />
     )
   }
