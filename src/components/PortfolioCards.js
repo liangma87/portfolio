@@ -7,7 +7,7 @@ import energy_logo from '../energy.jpg';
 class PortfolioCards extends Component {
   render() {
     return (
-      <CardColumns>
+      <CardColumns className="center-align">
         <Card>
           <CardImg top width="100%" src={social_logo} alt="Card image cap" />
           <CardBody>
