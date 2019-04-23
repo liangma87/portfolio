@@ -11,11 +11,11 @@ class App extends Component {
     return (
       <div className="App">
         <Header />
-        <Col sm={{ size: 10, offset: 1 }}>
+        {/*<Col sm={{ size: 10, offset: 1 }}>
           <ChartComponent
           symbol = "MSFT"
           />
-        </Col>
+        </Col>*/}
         <Col sm={{ size: 10, offset: 1 }}>
           <PortfolioCards />
         </Col>
