@@ -12,7 +12,9 @@ class App extends Component {
       <div className="App">
         <Header />
         <Col sm={{ size: 10, offset: 1 }}>
-          <ChartComponent />
+          <ChartComponent
+          symbol = "MSFT"
+          />
         </Col>
         <Col sm={{ size: 10, offset: 1 }}>
           <PortfolioCards />

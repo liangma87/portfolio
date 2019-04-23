@@ -16,9 +16,10 @@ function parseData(parse) {
 
 const parseDate = timeParse("%Y-%m-%d");
 
-export function getData() {
-  const promiseMSFT = fetch("https://cdn.rawgit.com/rrag/react-stockcharts/master/docs/data/MSFT.tsv")
+export function getData(symbol) {
+  const url = "https://cdn.rawgit.com/rrag/react-stockcharts/master/docs/data/" + symbol + ".tsv";
+  const promiseSymbol = fetch(url)
     .then(response => response.text())
     .then(data => tsvParse(data, parseData(parseDate)))
-  return promiseMSFT;
+  return promiseSymbol;
 }
