@@ -3,6 +3,7 @@ import './App.css';
 import Header from './components/Header';
 import ChartComponent from './components/ChartComponent';
 import PortfolioCards from './components/PortfolioCards';
+import Todos from './components/Todos';
 import { Col } from 'reactstrap';
 
 
@@ -27,8 +28,10 @@ class App extends Component {
   render() {
     const { activeTab } = this.state;
     let content;
-    if (activeTab == '1') {
+    if (activeTab === '1') {
       content = <PortfolioCards />;
+    } else if (activeTab === '3') {
+      content = <Todos />;
     } else {
       content = null;
     }
