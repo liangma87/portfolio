@@ -3,6 +3,7 @@ import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } f
 import { Form, Button, FormGroup, Input, InputGroupAddon, InputGroup } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import classnames from 'classnames';
 
 class Header extends Component {
   constructor(props) {
@@ -10,7 +11,8 @@ class Header extends Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-        isOpen: false
+        isOpen: false,
+        activeTab: '1'
     };
   }
 
@@ -20,22 +22,44 @@ class Header extends Component {
       });
   }
 
+  onToggleTab(tab) {
+    this.setState({
+      activeTab: tab
+    });
+    this.props.toggleTab(tab);
+  }
+
   render() {
     return (
       <div className="Header">
         <Navbar color="inverse" fixed-top light expand="md">
-          <NavbarBrand href="/">Home</NavbarBrand>
+          {/*<NavbarBrand href="/">Home</NavbarBrand>*/}
           <NavbarToggler onClick={this.toggle} className="mr-2"/>
           <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav className="mr-auto text-left" navbar>
+            <Nav className="mr-auto text-left" tabs>
               <NavItem>
-                  <NavLink href="#" active>Portfolio</NavLink>
+                  <NavLink
+                    className={classnames({ active: this.state.activeTab === '1' })}
+                    onClick={() => { this.onToggleTab('1'); }}
+                  >
+                    Portfolio
+                  </NavLink>
               </NavItem>
               <NavItem>
-                  <NavLink href="#">Ideas</NavLink>
+                  <NavLink
+                    className={classnames({ active: this.state.activeTab === '2' })}
+                    onClick={() => { this.onToggleTab('2'); }}
+                  >
+                    Ideas
+                  </NavLink>
               </NavItem>
               <NavItem>
-                  <NavLink href="#">Todos</NavLink>
+                  <NavLink
+                    className={classnames({ active: this.state.activeTab === '3' })}
+                    onClick={() => { this.onToggleTab('3'); }}
+                  >
+                    Todos
+                  </NavLink>
               </NavItem>
             </Nav>
             <Nav className="ml-auto text-left" navbar>
