@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem} from 'reactstrap';
 import { Form, Button, FormGroup, Input, InputGroupAddon, InputGroup } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import classnames from 'classnames';
+import { NavLink, Link } from 'react-router-dom';
+import AuthService from './auth/AuthService';
+
 
 class Header extends Component {
   constructor(props) {
@@ -12,8 +15,10 @@ class Header extends Component {
     this.toggle = this.toggle.bind(this);
     this.state = {
         isOpen: false,
-        activeTab: '1'
+        activeTab: '1',
     };
+
+    this.auth = new AuthService();
   }
 
   toggle() {
@@ -29,7 +34,14 @@ class Header extends Component {
     this.props.toggleTab(tab);
   }
 
+  userLogout() {
+    this.auth.logout();
+    this.forceUpdate();
+  }
+
   render() {
+    const isLoggedIn = this.auth.loggedIn();
+
     return (
       <div className="Header">
         <Navbar color="inverse" fixed-top light expand="md">
@@ -39,31 +51,34 @@ class Header extends Component {
             <Nav className="mr-auto text-left" tabs>
               <NavItem>
                   <NavLink
-                    className={classnames({ active: this.state.activeTab === '1' })}
-                    onClick={() => { this.onToggleTab('1'); }}
+                    to = {'/portfolios'}
+                    className="nav-link"
+                    activeClassName="active"
                   >
                     Portfolio
                   </NavLink>
               </NavItem>
               <NavItem>
                   <NavLink
-                    className={classnames({ active: this.state.activeTab === '2' })}
-                    onClick={() => { this.onToggleTab('2'); }}
+                    to = {'/ideas'}
+                    className="nav-link"
+                    activeClassName="active"
                   >
                     Ideas
                   </NavLink>
               </NavItem>
               <NavItem>
                   <NavLink
-                    className={classnames({ active: this.state.activeTab === '3' })}
-                    onClick={() => { this.onToggleTab('3'); }}
+                    to = {'/todos'}
+                    className="nav-link"
+                    activeClassName="active"
                   >
                     Todos
                   </NavLink>
               </NavItem>
             </Nav>
             <Nav className="ml-auto text-left" navbar>
-              <NavItem>
+              {/*<NavItem>
                 <Form inline>
                   <FormGroup>
                     <InputGroup>
@@ -79,9 +94,26 @@ class Header extends Component {
                     </InputGroup>
                   </FormGroup>
                 </Form>
-              </NavItem>
+              </NavItem>*/}
               <NavItem>
-                  <NavLink href="#">Login</NavLink>
+                  {isLoggedIn ? (
+                    <Button
+                      color="primary"
+                      onClick={() => this.userLogout()}
+                    >
+                      Logout
+                    </Button>
+                  ) : (
+                    <Link 
+                      to="/login"
+                    >
+                      <Button
+                        color="primary"
+                      >
+                        Login
+                      </Button>
+                    </Link>
+                  )}
               </NavItem>
             </Nav>
           </Collapse>

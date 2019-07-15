@@ -3,9 +3,10 @@ import './App.css';
 import Header from './components/Header';
 import ChartComponent from './components/ChartComponent';
 import PortfolioCards from './components/PortfolioCards';
-import Todos from './components/Todos';
 import { Col } from 'reactstrap';
-
+import TodoApp from './components/todo/TodoApp'
+import { Route, Switch } from 'react-router-dom';
+import Signin from './components/auth/Signin'
 
 class App extends Component {
 
@@ -14,7 +15,7 @@ class App extends Component {
     this.state = {
         activeTab: '1'
     };
-  }
+  };
 
   /*this var is also set inside header*/
   toggleTab = (tab) => {
@@ -23,31 +24,39 @@ class App extends Component {
         activeTab: tab
       });
     }
-  }
+  } ;
 
   render() {
     const { activeTab } = this.state;
     let content;
+    
     if (activeTab === '1') {
       content = <PortfolioCards />;
     } else if (activeTab === '3') {
-      content = <Todos />;
+      content = <TodoApp />;
+      /*content = <TodoList />;*/
     } else {
       content = null;
     }
+    
     return (
       <div className="App">
         <Header 
             toggleTab={this.toggleTab}
         />
+        <div className='mr-3 ml-3'>
+          <Switch>
+            <Route exact path='/' component={PortfolioCards}/>
+            <Route path="/portfolios" component={PortfolioCards} />
+            <Route path="/todos" component={TodoApp} />
+            <Route path="/login" component={Signin} />
+          </Switch>
+        </div>
         {/*<Col sm={{ size: 10, offset: 1 }}>
           <ChartComponent
           symbol = "MSFT"
           />
         </Col>*/}
-        <Col sm={{ size: 10, offset: 1 }}>
-          {content}
-        </Col>
       </div>
     );
   }
