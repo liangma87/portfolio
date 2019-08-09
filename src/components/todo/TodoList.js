@@ -4,17 +4,21 @@ import Todo from './Todo'
 import { ListGroup } from 'reactstrap';
 
 
-const TodoList = ({ todos, onTodoClick }) => (
-  <ListGroup>
-    {todos.map((todo) => (
-      <Todo
+const TodoList = ({todos, stocks, onTodoDateClick}) => {
+
+  return (<ListGroup>
+    {todos.map((todo) => {
+      return (
+        <Todo
         key={todo.id}
         {...todo}
-        onClick={() => onTodoClick(todo.id)}
-      />
-    ))}
-  </ListGroup>
-)
+        stock = {stocks.find(stock => stock.id == todo.stock_id)}
+        onDateClick={onTodoDateClick}
+        />
+      )
+    })}
+  </ListGroup>)
+}
 
 TodoList.propTypes = {
   todos: PropTypes.arrayOf(PropTypes.shape({

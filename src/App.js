@@ -7,6 +7,8 @@ import { Col } from 'reactstrap';
 import TodoApp from './components/todo/TodoApp'
 import { Route, Switch } from 'react-router-dom';
 import Signin from './components/auth/Signin'
+import AddTodo from './components/AddTodo';
+
 
 class App extends Component {
 
@@ -27,17 +29,6 @@ class App extends Component {
   } ;
 
   render() {
-    const { activeTab } = this.state;
-    let content;
-    
-    if (activeTab === '1') {
-      content = <PortfolioCards />;
-    } else if (activeTab === '3') {
-      content = <TodoApp />;
-      /*content = <TodoList />;*/
-    } else {
-      content = null;
-    }
     
     return (
       <div className="App">
@@ -50,6 +41,7 @@ class App extends Component {
             <Route path="/portfolios" component={PortfolioCards} />
             <Route path="/todos" component={TodoApp} />
             <Route path="/login" component={Signin} />
+            <Route path="/addtodo/:ticker" component={AddTodo} />
           </Switch>
         </div>
         {/*<Col sm={{ size: 10, offset: 1 }}>
