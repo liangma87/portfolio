@@ -29,6 +29,17 @@ class App extends Component {
   } ;
 
   render() {
+    const { activeTab } = this.state;
+    let content;
+    
+    if (activeTab === '1') {
+      content = <PortfolioCards />;
+    } else if (activeTab === '3') {
+      content = <TodoApp />;
+      /*content = <TodoList />;*/
+    } else {
+      content = null;
+    }
     
     return (
       <div className="App">
