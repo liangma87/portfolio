@@ -1,11 +1,11 @@
 import React from 'react'
-import VisibleTodoList from '../../containers/VisibleTodoList'
-import TodoFilter from './TodoFilter'
+import TodoListContainer from '../../containers/TodoListContainer'
+import TodoFilterContainer from '../../containers/TodoFilterContainer'
 
 const TodoApp = () => (
   <div>
-    <TodoFilter />
-    <VisibleTodoList />
+    <TodoFilterContainer />
+    <TodoListContainer />
   </div>
 )
 

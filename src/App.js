@@ -7,6 +7,8 @@ import { Col } from 'reactstrap';
 import TodoApp from './components/todo/TodoApp'
 import { Route, Switch } from 'react-router-dom';
 import Signin from './components/auth/Signin'
+import AddTodo from './components/AddTodo';
+
 
 class App extends Component {
 
@@ -50,6 +52,7 @@ class App extends Component {
             <Route path="/portfolios" component={PortfolioCards} />
             <Route path="/todos" component={TodoApp} />
             <Route path="/login" component={Signin} />
+            <Route path="/addtodo/:ticker" component={AddTodo} />
           </Switch>
         </div>
         {/*<Col sm={{ size: 10, offset: 1 }}>

@@ -66,3 +66,7 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+
+# src this to cofnigure the npm tool version: cfg_vagrant.tcl
+# Use npm start to start, it will use port 3040 by default
