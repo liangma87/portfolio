@@ -15,7 +15,8 @@ const EditModal = (props) => {
     notes,
     date,
     handleNotesChange,
-    handleDateChange
+    handleDateChange,
+    handleSumbit
   } = props;
 
   return (
@@ -38,7 +39,7 @@ const EditModal = (props) => {
           />
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={onToggleClick}>Submit</Button>{' '}
+          <Button color="primary" onClick={handleSumbit}>Submit</Button>{' '}
           <Button color="secondary" onClick={onToggleClick}>Cancel</Button>
         </ModalFooter>
       </Modal>
@@ -50,6 +51,7 @@ class Claude extends React.Component {
 
   constructor(props) {
     super(props);
+    // Maybe has a list of who can change the following states
     this.state = {
       todos: [],
       modal: false,
@@ -89,8 +91,35 @@ class Claude extends React.Component {
   }
   
   handleDateChange = (event) => {
-    console.log(event.target.value)
     this.setState({m_todo_compl_date: event.target.value});
+  }
+
+  onModalSubmitClick = (event) => {
+    event.preventDefault();
+
+    this.setState({modal: !this.state.modal})
+    console.log("onModalSubmitClick")
+    console.log(this.state.m_todo_compl_date)
+    console.log(this.state.m_todo_notes)
+
+    var url = 'http://0.0.0.0:3040/api/v1/todos/' + this.state.m_todo_id
+    fetch(url, {
+      method: 'PATCH',
+      body: JSON.stringify({todo: { completion_date: this.state.m_todo_compl_date,
+                                    notes: this.state.m_todo_notes}}),
+      headers:{
+      'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(response => {
+      // update redux state upon sucessful database update
+      // ***** needs ui updates to show the updated date as well
+      //this.props.onPushOutClick(id, week)
+      //console.log('Success:', JSON.stringify(response))
+    })
+    .catch(error => console.error('Error:', error));
+
   }
 
   render() {
@@ -131,6 +160,7 @@ class Claude extends React.Component {
         date={this.state.m_todo_compl_date}
         handleNotesChange={this.handleDescrptChange}
         handleDateChange={this.handleDateChange}
+        handleSumbit={this.onModalSubmitClick}
         />
       </div>
       );
