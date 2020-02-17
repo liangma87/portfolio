@@ -76,7 +76,6 @@ class Todo extends React.Component {
           </DropdownToggle>
           <DropdownMenu>
             <DropdownItem onClick={() => this.props.onEditClick(this.props.stock, this.props.id, this.props.notes, this.props.completion_date)}> Edit </DropdownItem>
-            <DropdownItem onClick={() => this.onActionClick(2)}>Add</DropdownItem>
             <DropdownItem onClick={() => this.onActionClick(2)}>Done</DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>
