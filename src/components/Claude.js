@@ -7,7 +7,6 @@ import { Button, Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'react
 
 const EditModal = (props) => {
   const {
-    buttonLabel,
     modal,
     onToggleClick,
     className,
@@ -69,7 +68,7 @@ class Claude extends React.Component {
     .then((res) => res.json())
     .then((res) => {
       this.setState({todos: res})
-      console.log(this.state.todos);
+      //console.log(this.state.todos);
     })
     .catch((err) => alert(err));
   }
@@ -98,9 +97,9 @@ class Claude extends React.Component {
     event.preventDefault();
 
     this.setState({modal: !this.state.modal})
-    console.log("onModalSubmitClick")
-    console.log(this.state.m_todo_compl_date)
-    console.log(this.state.m_todo_notes)
+    //console.log("onModalSubmitClick")
+    //console.log(this.state.m_todo_compl_date)
+    //console.log(this.state.m_todo_notes)
 
     var url = 'http://0.0.0.0:3040/api/v1/todos/' + this.state.m_todo_id
     fetch(url, {
@@ -111,8 +110,19 @@ class Claude extends React.Component {
       'Content-Type': 'application/json'
       }
     })
-    .then(res => res.json())
+    .then(res => {
+      res.json()
+    })
     .then(response => {
+      var todos = this.state.todos
+      var new_todos = todos.map((todo) => {
+        if(todo.id === this.state.m_todo_id) {
+            todo.completion_date = this.state.m_todo_compl_date
+            todo.notes = this.state.m_todo_notes
+        }
+        return todo    
+      })
+      this.setState({todos: new_todos})
       // update redux state upon sucessful database update
       // ***** needs ui updates to show the updated date as well
       //this.props.onPushOutClick(id, week)
@@ -151,7 +161,6 @@ class Claude extends React.Component {
       })}
       </ListGroup>
       <EditModal
-        buttonLabel="Edit"
         modal={this.state.modal}
         onToggleClick={this.onEditClick}
         className="modal-lg"
