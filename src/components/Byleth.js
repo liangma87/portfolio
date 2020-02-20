@@ -66,7 +66,6 @@ const AddTodoModal = (props) => {
 }
 
 
-
 class Byleth extends React.Component {
 
   constructor(props) {
@@ -100,24 +99,42 @@ class Byleth extends React.Component {
 
   onModalSubmitClick = (event) => {
     event.preventDefault();
-
     this.setState({modal: !this.state.modal})
-    console.log("onModalSubmitClick")
-    console.log(this.state.m_symbol)
-    console.log(this.state.m_todo_compl_date)
-    console.log(this.state.m_todo_notes)
+
+    var url = 'http://0.0.0.0:3040/api/v1/todos/' + this.state.m_symbol
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({todo: { completion_date: this.state.m_todo_compl_date,
+                                    notes: this.state.m_todo_notes}}),
+      headers:{
+      'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      res.json()
+    })
+    .then(response => {
+      // This is just hack to work around the UI issue
+      // The todos are not updated due to todos are not props
+      // This problem will go away once we use redux to mannage state
+      this.fetchAllTodos()
+    })
+    .catch(error => console.error('Error:', error));
+
   }
 
-
-  componentDidMount() {
+  fetchAllTodos = () => {
 
     fetch("http://0.0.0.0:3040/api/v1/companies")
     .then((res) => res.json())
     .then((res) => {
       this.setState({stocks: res})
-      console.log(this.state.stocks);
     })
     .catch((err) => alert(err));
+  }
+
+  componentDidMount() {
+    this.fetchAllTodos()
   }
 
   onStockFilterClick = (stock_id) => {
@@ -161,7 +178,7 @@ class Byleth extends React.Component {
               onClick={() => this.onStockFilterClick(-1)}
               active={this.state.selected === -1}
             >
-              All <Badge color="secondary">{this.state.totoal_todos}</Badge>
+              All
             </Button>
             <Button 
               color ="success"
