@@ -78,7 +78,7 @@ class Claude extends React.Component {
     if(this.state.modal) {
       return;
     }
-    console.log(todo_completion_date)
+    //console.log(todo_completion_date)
     this.setState({m_symbol: stock.symbol});
     this.setState({m_todo_id: todo_id});
     this.setState({m_todo_notes: todo_notes});
@@ -132,6 +132,32 @@ class Claude extends React.Component {
 
   }
 
+  onDoneClick = (id) => {
+    console.log("onDoneClick called")
+    console.log(id)
+
+    var url = 'http://0.0.0.0:3040/api/v1/todos/' + id
+    fetch(url, {
+      method: 'DELETE',
+      headers:{
+      'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      res.json()
+    })
+    .then(response => {
+      var todos = this.state.todos
+      var new_todos = todos.filter(todo => todo.id != id)
+      this.setState({todos: new_todos})
+      // update redux state upon sucessful database update
+      // ***** needs ui updates to show the updated date as well
+      //this.props.onPushOutClick(id, week)
+      //console.log('Success:', JSON.stringify(response))
+    })
+    .catch(error => console.error('Error:', error));
+  }
+
   render() {
     const todos = this.state.todos
     
@@ -156,6 +182,7 @@ class Claude extends React.Component {
           {...todo}
           stock={this.props.stocks.find(stock => stock.id === todo.company_id)}
           onEditClick={this.onEditClick}
+          onDoneClick={this.onDoneClick}
           />
         )
       })}
