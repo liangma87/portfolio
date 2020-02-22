@@ -64,7 +64,7 @@ class Claude extends React.Component {
 
   componentDidMount() {
 
-    fetch("http://0.0.0.0:3040/api/v1/todos")
+    fetch("http://0.0.0.0:3040/api/todos")
     .then((res) => res.json())
     .then((res) => {
       this.setState({todos: res})
@@ -101,7 +101,7 @@ class Claude extends React.Component {
     //console.log(this.state.m_todo_compl_date)
     //console.log(this.state.m_todo_notes)
 
-    var url = 'http://0.0.0.0:3040/api/v1/todos/' + this.state.m_todo_id
+    var url = 'http://0.0.0.0:3040/api/todos/' + this.state.m_todo_id
     fetch(url, {
       method: 'PATCH',
       body: JSON.stringify({todo: { completion_date: this.state.m_todo_compl_date,
@@ -136,7 +136,7 @@ class Claude extends React.Component {
     console.log("onDoneClick called")
     console.log(id)
 
-    var url = 'http://0.0.0.0:3040/api/v1/todos/' + id
+    var url = 'http://0.0.0.0:3040/api/todos/' + id
     fetch(url, {
       method: 'DELETE',
       headers:{

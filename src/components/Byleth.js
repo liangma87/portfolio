@@ -101,7 +101,7 @@ class Byleth extends React.Component {
     event.preventDefault();
     this.setState({modal: !this.state.modal})
 
-    var url = 'http://0.0.0.0:3040/api/v1/todos/' + this.state.m_symbol
+    var url = 'http://0.0.0.0:3040/api/todos/' + this.state.m_symbol
     fetch(url, {
       method: 'POST',
       body: JSON.stringify({todo: { completion_date: this.state.m_todo_compl_date,
@@ -125,7 +125,7 @@ class Byleth extends React.Component {
 
   fetchAllTodos = () => {
 
-    fetch("http://0.0.0.0:3040/api/v1/companies")
+    fetch("http://0.0.0.0:3040/api/companies")
     .then((res) => res.json())
     .then((res) => {
       this.setState({stocks: res})
