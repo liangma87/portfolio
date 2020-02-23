@@ -5,19 +5,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
-import rootReducer from './reducers'
+//import { createStore } from 'redux'
+//import { Provider } from 'react-redux'
+//import rootReducer from './reducers'
 import { BrowserRouter as Router } from 'react-router-dom';
 
-const store = createStore(rootReducer)
+//const store = createStore(rootReducer)
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router>
-      <App />
-    </Router>
-  </Provider>,
+  //<Provider store={store}>
+  <Router>
+    <App />
+  </Router>,
+  //</Provider>,
   document.getElementById('root')
 )
 

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem} from 'reactstrap';
-import { Form, Button, FormGroup, Input, InputGroupAddon, InputGroup } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import classnames from 'classnames';
+import { Collapse, Navbar, NavbarToggler, Nav, NavItem} from 'reactstrap';
+import { Button } from 'reactstrap';
+//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+//import { faSearch } from '@fortawesome/free-solid-svg-icons';
+//import classnames from 'classnames';
 import { NavLink, Link } from 'react-router-dom';
 import AuthService from './auth/AuthService';
 
@@ -51,29 +51,11 @@ class Header extends Component {
             <Nav className="mr-auto text-left" tabs>
               <NavItem>
                   <NavLink
-                    to = {'/portfolios'}
+                    to = {'/'}
                     className="nav-link"
                     activeClassName="active"
                   >
-                    Portfolio
-                  </NavLink>
-              </NavItem>
-              <NavItem>
-                  <NavLink
-                    to = {'/ideas'}
-                    className="nav-link"
-                    activeClassName="active"
-                  >
-                    Ideas
-                  </NavLink>
-              </NavItem>
-              <NavItem>
-                  <NavLink
-                    to = {'/todos'}
-                    className="nav-link"
-                    activeClassName="active"
-                  >
-                    Todos
+                    Bagger-Research
                   </NavLink>
               </NavItem>
             </Nav>
