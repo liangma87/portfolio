@@ -157,7 +157,7 @@ class Byleth extends React.Component {
           onClick={() => this.onStockFilterClick(stock.id)}
           active={this.state.selected === stock.id}
         >
-          {stock.symbol} <Badge color="secondary">{stock.todos}</Badge>
+          {stock.symbol} <Badge color="secondary">{stock.todos_cnt}</Badge>
         </Button>);
     });
 

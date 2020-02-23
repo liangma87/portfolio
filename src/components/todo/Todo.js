@@ -1,6 +1,6 @@
 import React from 'react';
-import { ListGroupItem } from 'reactstrap';
-import { 
+import {
+  ListGroupItem,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -8,7 +8,7 @@ import {
   Button
 } from 'reactstrap';
 
-const Item = ({ ticker, text}) => (
+const Item = ({ticker, text}) => (
   <div className="d-flex">
     <Button 
       color ="info"
@@ -18,42 +18,42 @@ const Item = ({ ticker, text}) => (
     > 
       {ticker}
     </Button>
-    <div className='ml-1'>
-      {text}
-    </div>
+    <div className='ml-1'>{text}</div>
   </div>
 )
 
-// TODO: Todo seems can be a stateless component
+const Todo = (props) => {
+  const {
+    stock,
+    id,
+    notes,
+    date,
+    onEditClick,
+    onDoneClick
+  } = props;
 
-class Todo extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-
-    return (
-      <div>
+  return (
+    <div>
       <ListGroupItem
         className="d-flex justify-content-between"
         style ={{wordBreak: 'break-all', minWidth: '50%'}}
       >
-        <Item ticker={this.props.stock.symbol} text={this.props.notes} />
+        <Item ticker={stock.symbol} text={notes}/>
         <UncontrolledDropdown>
-          <DropdownToggle caret>
-            {this.props.completion_date}  
-          </DropdownToggle>
+          <DropdownToggle caret>{date} </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem onClick={() => this.props.onEditClick(this.props.stock, this.props.id, this.props.notes, this.props.completion_date)}> Edit </DropdownItem>
-            <DropdownItem onClick={() => this.props.onDoneClick(this.props.id)}>Done</DropdownItem>
+            <DropdownItem onClick={() => onEditClick(stock, id, notes, date)}>
+              Edit
+            </DropdownItem>
+            <DropdownItem onClick={() => onDoneClick(id)}>
+              Done
+            </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>
       </ListGroupItem>
-      </div>
-    );
-  }
-
+    </div>
+  )
 }
+
 
 export default Todo
