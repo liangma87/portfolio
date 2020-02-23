@@ -21,43 +21,41 @@ import { Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const AddTodoModal = (props) => {
   const {
-    modal,
+    isOpen,
     className,
     onToggleClick,
-    handleStockChange,
-    handleNotesChange,
-    handleDateChange,
-    handleSumbit
+    onSymbolChange,
+    onNotesChange,
+    onDateChange,
+    onSumbitClick
   } = props;
-
-  var today = new Date().toISOString().split('T')[0]
 
   return (
     <div>
-      <Modal isOpen={modal} toggle={onToggleClick} className={className} >
+      <Modal isOpen={isOpen} toggle={onToggleClick} className={className} >
         <ModalHeader toggle={onToggleClick}>{"Add Todo"}</ModalHeader>
         <ModalBody>
           <Input 
             type="textarea" 
             placeholder={"Enter stock symbol here"}
             rows={1}
-            onChange={handleStockChange}
+            onChange={onSymbolChange}
           />
           <Input 
             type="textarea" 
             placeholder={"Enter todo notes here"}
             rows={5}
-            onChange={handleNotesChange}
+            onChange={onNotesChange}
           />
           <Input
             type="date"
             name="date"
             id="exampleDate"
-            onChange={handleDateChange}
+            onChange={onDateChange}
           />
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={handleSumbit}>Submit</Button>{' '}
+          <Button color="primary" onClick={onSumbitClick}>Submit</Button>{' '}
           <Button color="secondary" onClick={onToggleClick}>Cancel</Button>
         </ModalFooter>
       </Modal>
@@ -73,58 +71,18 @@ class Byleth extends React.Component {
     this.state = {
       selected: -1,
       stocks: [],
-      modal: false,
-      m_symbol: "Seiros",
-      m_todo_notes: "Seiros",
-      m_todo_compl_date: "02-02-2020" 
+      isModOpen: false,
+      modSymbol: "Seiros",
+      modNotes: "Seiros",
+      modDate: "02-02-2020" 
     };
   }
 
-  onAddTodoClick = () => {
-    this.setState({modal: !this.state.modal})
-  }
-
-
-  handleStockChange = (event) => {
-    this.setState({m_symbol: event.target.value});
-  }
-
-  handleNotesChange = (event) => {
-    this.setState({m_todo_notes: event.target.value});
-  }
-  
-  handleDateChange = (event) => {
-    this.setState({m_todo_compl_date: event.target.value});
-  }
-
-  onModalSubmitClick = (event) => {
-    event.preventDefault();
-    this.setState({modal: !this.state.modal})
-
-    var url = 'http://0.0.0.0:3040/api/todos/' + this.state.m_symbol
-    fetch(url, {
-      method: 'POST',
-      body: JSON.stringify({todo: { completion_date: this.state.m_todo_compl_date,
-                                    notes: this.state.m_todo_notes}}),
-      headers:{
-      'Content-Type': 'application/json'
-      }
-    })
-    .then(res => {
-      res.json()
-    })
-    .then(response => {
-      // This is just hack to work around the UI issue
-      // The todos are not updated due to todos are not props
-      // This problem will go away once we use redux to mannage state
-      this.fetchAllTodos()
-    })
-    .catch(error => console.error('Error:', error));
-
+  componentDidMount() {
+    this.fetchAllTodos()
   }
 
   fetchAllTodos = () => {
-
     fetch("http://0.0.0.0:3040/api/companies")
     .then((res) => res.json())
     .then((res) => {
@@ -133,12 +91,47 @@ class Byleth extends React.Component {
     .catch((err) => alert(err));
   }
 
-  componentDidMount() {
-    this.fetchAllTodos()
-  }
-
   onStockFilterClick = (stock_id) => {
     this.setState({ selected: stock_id, stocks: this.state.stocks})
+  }
+
+  onAddTodoClick = () => {
+    this.setState({isModOpen: !this.state.isModOpen})
+  }
+
+  onSymbolChange = (event) => {
+    this.setState({modSymbol: event.target.value});
+  }
+
+  onNotesChange = (event) => {
+    this.setState({modNotes: event.target.value});
+  }
+  
+  onDateChange = (event) => {
+    this.setState({modDate: event.target.value});
+  }
+
+  onModSubmitClick = (event) => {
+    event.preventDefault();
+    this.setState({isModOpen: !this.state.isModOpen})
+
+    var url = 'http://0.0.0.0:3040/api/todos/' + this.state.modSymbol
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({todo: { completion_date: this.state.modDate,
+                                    notes: this.state.modNotes}}),
+      headers:{
+      'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      res.json()
+    })
+    .then(response => {
+      this.fetchAllTodos()
+    })
+    .catch(error => console.error('Error:', error));
+
   }
 
   render() {
@@ -148,24 +141,22 @@ class Byleth extends React.Component {
       return (<div>Loading...</div>)
     }
 
-    var stk_btns = stocks.map(stock => {
-      return (
-        <Button 
-          color ="info"
-          outline
-          className='mr-1 mb-1'
-          onClick={() => this.onStockFilterClick(stock.id)}
-          active={this.state.selected === stock.id}
-        >
-          {stock.symbol} <Badge color="secondary">{stock.todos_cnt}</Badge>
-        </Button>);
-    });
+    var stk_btns = stocks.map(stock => 
+      <Button 
+        color ="info"
+        outline
+        className='mr-1 mb-1'
+        onClick={() => this.onStockFilterClick(stock.id)}
+        active={this.state.selected === stock.id}
+      >
+        {stock.symbol} <Badge color="secondary">{stock.todos_cnt}</Badge>
+      </Button>
+    )
 
     var selected;
     selected = stocks.filter(stock => 
       this.state.selected === stock.id || this.state.selected === -1);
 
-    //Console.log(selected)
     return (
       <div>
         <div className="d-flex justify-content-between mb-3">
@@ -194,12 +185,12 @@ class Byleth extends React.Component {
           stocks={selected}
         />
         <AddTodoModal 
-          modal={this.state.modal}
+          isOpen={this.state.isModOpen}
           onToggleClick={this.onAddTodoClick}
-          handleStockChange={this.handleStockChange}
-          handleNotesChange={this.handleNotesChange}
-          handleDateChange={this.handleDateChange}
-          handleSumbit={this.onModalSubmitClick}
+          onSymbolChange={this.onSymbolChange}
+          onNotesChange={this.onNotesChange}
+          onDateChange={this.onDateChange}
+          onSumbitClick={this.onModSubmitClick}
         />
       </div>
     );

@@ -19,9 +19,9 @@ const EditTodoMod = (props) => {
     notes,
     date,
     onToggleClick,
-    handleNotesChange,
-    handleDateChange,
-    handleSumbit
+    onNotesChange,
+    onDateChange,
+    onSumbitClick
   } = props;
 
   return (
@@ -33,18 +33,18 @@ const EditTodoMod = (props) => {
             type="textarea" 
             value={notes}
             rows={5}
-            onChange={handleNotesChange}
+            onChange={onNotesChange}
           />
           <Input
             type="date"
             name="date"
             id="exampleDate"
             value={date}
-            onChange={handleDateChange}
+            onChange={onDateChange}
           />
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={handleSumbit}>Submit</Button>{' '}
+          <Button color="primary" onClick={onSumbitClick}>Submit</Button>{' '}
           <Button color="secondary" onClick={onToggleClick}>Cancel</Button>
         </ModalFooter>
       </Modal>
@@ -78,24 +78,24 @@ class Claude extends React.Component {
   }
 
   // Call backs
-  onEditTodoModNotesChange = (event) => {
+  onModNotesChange = (event) => {
     this.setState({modTodoNotes: event.target.value});
   }
   
-  onEditTodoModDateChange = (event) => {
+  onModDateChange = (event) => {
     this.setState({modTodoDate: event.target.value});
   }
 
-  onEditTodoModSubmitClick = (event) => {
+  onModSubmitClick = (event) => {
     event.preventDefault();
 
-    this.setState({modal: !this.state.modal})
+    this.setState({isModOpen: !this.state.isModOpen})
 
-    var url = 'http://0.0.0.0:3040/api/todos/' + this.state.m_todo_id
+    var url = 'http://0.0.0.0:3040/api/todos/' + this.state.modTodoID
     fetch(url, {
       method: 'PATCH',
-      body: JSON.stringify({todo: { completion_date: this.state.m_todo_compl_date,
-                                    notes: this.state.m_todo_notes}}),
+      body: JSON.stringify({todo: { completion_date: this.state.modTodoDate,
+                                    notes: this.state.modTodoNotes}}),
       headers:{
       'Content-Type': 'application/json'
       }
@@ -106,9 +106,9 @@ class Claude extends React.Component {
     .then(response => {
       var todos = this.state.todos
       var new_todos = todos.map((todo) => {
-        if(todo.id === this.state.m_todo_id) {
-            todo.completion_date = this.state.m_todo_compl_date
-            todo.notes = this.state.m_todo_notes
+        if(todo.id === this.state.modTodoID) {
+            todo.completion_date = this.state.modTodoDate
+            todo.notes = this.state.modTodoNotes
         }
         return todo    
       })
@@ -119,8 +119,8 @@ class Claude extends React.Component {
   }
 
   onModEditClick = (stock, todo_id, todo_notes, todo_completion_date) => {
-    this.setState({isModalOpen: !this.state.isModalOpen})
-    if(this.state.isModalOpen) {
+    this.setState({isModOpen: !this.state.isModOpen})
+    if(this.state.isModOpen) {
       return;
     }
     this.setState({modTodoSym: stock.symbol});
@@ -139,7 +139,7 @@ class Claude extends React.Component {
     })
     .then(res => {
       var todos = this.state.todos
-      var new_todos = todos.filter(todo => todo.id != todo_id)
+      var new_todos = todos.filter(todo => todo.id !== todo_id)
       this.setState({todos: new_todos})
     })
     .catch(error => console.error('Error:', error));
@@ -152,7 +152,7 @@ class Claude extends React.Component {
     if(todos.length <= 0 | stocks.length <= 0) {
       return (<div>Loading...</div>)
     }
-    if(stocks.length == 1) {
+    if(stocks.length === 1) {
       todos = todos.filter(todo => stocks[0].id === todo.company_id)
     }
 
@@ -176,10 +176,10 @@ class Claude extends React.Component {
           title={this.state.modTodoSym}
           notes={this.state.modTodoNotes}
           date={this.state.modTodoDate}
-          onToggleClick={this.onEditClick}
-          handleNotesChange={this.onEditTodoModNotesChange}
-          handleDateChange={this.onEditTodoModDateChange}
-          handleSumbit={this.onEditTodoModSubmitClick}
+          onToggleClick={this.onModEditClick}
+          onNotesChange={this.onModNotesChange}
+          onDateChange={this.onModDateChange}
+          onSumbitClick={this.onModSubmitClick}
         />
       </div>
     )
