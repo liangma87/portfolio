@@ -55,7 +55,16 @@ class Header extends Component {
                     className="nav-link"
                     activeClassName="active"
                   >
-                    Bagger-Research
+                    Todos
+                  </NavLink>
+              </NavItem>
+              <NavItem>
+                  <NavLink
+                    to = {'/'}
+                    className="nav-link"
+                    activeClassName="active"
+                  >
+                    Notes
                   </NavLink>
               </NavItem>
             </Nav>

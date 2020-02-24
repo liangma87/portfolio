@@ -4,6 +4,7 @@ import {
   Button,
 } from 'reactstrap';
 import Claude from './Claude'
+import Edelgard from './Edelgard'
 import { Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 // AIs for next 3 months
@@ -181,9 +182,10 @@ class Byleth extends React.Component {
             </Button>
           </div>
         </div>
-        <Claude 
+        {/*<Claude 
           stocks={selected}
-        />
+        />*/}
+        <Edelgard />
         <AddTodoModal 
           isOpen={this.state.isModOpen}
           onToggleClick={this.onAddTodoClick}

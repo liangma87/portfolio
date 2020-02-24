@@ -40,7 +40,7 @@ const Todo = (props) => {
       >
         <Item ticker={stock.symbol} text={notes}/>
         <UncontrolledDropdown>
-          <DropdownToggle caret>{date} </DropdownToggle>
+          <DropdownToggle caret>{date}</DropdownToggle>
           <DropdownMenu>
             <DropdownItem onClick={() => onEditClick(stock, id, notes, date)}>
               Edit

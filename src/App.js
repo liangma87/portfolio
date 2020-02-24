@@ -15,9 +15,7 @@ class App extends Component {
     
     return (
       <div className="App">
-        <Header 
-            toggleTab={this.toggleTab}
-        />
+        <Header />
         <div className='mr-3 ml-3'>
           <Byleth />
         </div>
