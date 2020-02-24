@@ -10,9 +10,42 @@ import {
   CardText
 } from 'reactstrap';
 
-// TODO center the text
-
 // Edelgard is a service that renders notes
+
+const NoteCard = ({title, note, date}) => {
+
+  const cardStyle = {
+      flexGrow: 0,
+      flexBasis: '25rem'
+  };
+  return (
+  <Card body outline color="secondary" className="text-center ml-2 mb-2" style={cardStyle}>
+    <UncontrolledDropdown>
+      <CardTitle>
+        <DropdownToggle caret tag="span">
+          {title}
+        </DropdownToggle>
+        <DropdownMenu>
+          <DropdownItem>
+            Edit
+          </DropdownItem>
+          <DropdownItem>
+            Delete
+          </DropdownItem>
+        </DropdownMenu>
+      </CardTitle>
+    </UncontrolledDropdown>
+    <CardText>
+      {note}
+    </CardText>
+    <CardText>
+        <small className="text-muted">
+          {date}
+        </small>
+    </CardText>
+  </Card>)
+}
+
 class Edelgard extends React.Component {
 
   constructor(props) {
@@ -26,154 +59,48 @@ class Edelgard extends React.Component {
   }
 
   render() {
-
-    const cardStyle = {
-      flexGrow: 0,
-      flexBasis: '25rem'
-    };
-
     return (
       <div className="d-flex justify-content-start align-content-start flex-wrap">
-        <Card body outline color="secondary" className="text-center ml-2 mb-2" style={cardStyle}>
-          <UncontrolledDropdown>
-            <CardTitle>
-                <DropdownToggle caret tag="span">
-                  Special Title Treatment
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem>
-                    Edit
-                  </DropdownItem>
-                  <DropdownItem>
-                    Delete
-                  </DropdownItem>
-                </DropdownMenu>
-            </CardTitle>
-          </UncontrolledDropdown>
-          <CardText>
-            With supporting text below as a natural lead-in to additional content.
-          </CardText>
-          <CardText>
-              <small className="text-muted">Last updated 3 mins ago</small>
-          </CardText>
-        </Card>
-        <Card body outline color="secondary" className="text-center ml-2 mb-2" style={cardStyle}>
-          <UncontrolledDropdown>
-            <CardTitle>
-                <DropdownToggle caret tag="span">
-                  Special Title Treatment
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem>
-                    Edit
-                  </DropdownItem>
-                  <DropdownItem>
-                    Delete
-                  </DropdownItem>
-                </DropdownMenu>
-            </CardTitle>
-          </UncontrolledDropdown>
-          <CardText>
-            With supporting text below as a natural lead-in to additional content.
-          </CardText>
-          <CardText>
-              <small className="text-muted">Last updated 3 mins ago</small>
-          </CardText>
-        </Card>
-        <Card body outline color="secondary" className="text-center ml-2 mb-2" style={cardStyle}>
-          <UncontrolledDropdown>
-            <CardTitle>
-                <DropdownToggle caret tag="span">
-                  Special Title Treatment
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem>
-                    Edit
-                  </DropdownItem>
-                  <DropdownItem>
-                    Delete
-                  </DropdownItem>
-                </DropdownMenu>
-            </CardTitle>
-          </UncontrolledDropdown>
-          <CardText>
-            With supporting text below as a natural lead-in to additional content.
-            </CardText>
-          <CardText>
-              <small className="text-muted">Last updated 3 mins ago</small>
-          </CardText>
-        </Card>
-        <Card body outline color="secondary" className="text-center ml-2 mb-2" style={cardStyle}>
-          <UncontrolledDropdown>
-            <CardTitle>
-                <DropdownToggle caret tag="span">
-                  Special Title Treatment
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem>
-                    Edit
-                  </DropdownItem>
-                  <DropdownItem>
-                    Delete
-                  </DropdownItem>
-                </DropdownMenu>
-            </CardTitle>
-          </UncontrolledDropdown>
-          <CardText>
-            With supporting text below as a natural lead-in to additional content.
-            </CardText>
-          <CardText>
-              <small className="text-muted">Last updated 3 mins ago</small>
-          </CardText>
-        </Card>
-        <Card body outline color="secondary" className="text-center ml-2 mb-2" style={cardStyle}>
-          <UncontrolledDropdown>
-            <CardTitle>
-                <DropdownToggle caret tag="span">
-                  Special Title Treatment
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem>
-                    Edit
-                  </DropdownItem>
-                  <DropdownItem>
-                    Delete
-                  </DropdownItem>
-                </DropdownMenu>
-            </CardTitle>
-          </UncontrolledDropdown>
-          <CardText>
-            With supporting text below as a natural lead-in to additional content.
-            </CardText>
-          <CardText>
-              <small className="text-muted">Last updated 3 mins ago</small>
-          </CardText>
-        </Card>
-        <Card body outline color="secondary" className="text-center ml-2 mb-2" style={cardStyle}>
-          <UncontrolledDropdown>
-            <CardTitle>
-                <DropdownToggle caret tag="span">
-                  Special Title Treatment
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem>
-                    Edit
-                  </DropdownItem>
-                  <DropdownItem>
-                    Delete
-                  </DropdownItem>
-                </DropdownMenu>
-            </CardTitle>
-          </UncontrolledDropdown>
-          <CardText>
-            With supporting text below as a natural lead-in to additional content.
-            With supporting text below as a natural lead-in to additional content.
-            With supporting text below as a natural lead-in to additional content.
-            </CardText>
-          <CardText>
-              <small className="text-muted">Last updated 3 mins ago</small>
-          </CardText>
-        </Card>
+        <NoteCard 
+          title={"Special Title Treatment"}
+          note={"With supporting text below as a natural lead-in to additional content."}
+          date={"2020-02-03"}
+        />
+        <NoteCard 
+          title={"Special Title Treatment"}
+          note={"With supporting text below as a natural lead-in to additional content."}
+          date={"2020-02-03"}
+        />
+        <NoteCard 
+          title={"Special Title Treatment"}
+          note={"With supporting text below as a natural lead-in to additional content."}
+          date={"2020-02-03"}
+        />
+        <NoteCard 
+          title={"Special Title Treatment"}
+          note={"With supporting text below as a natural lead-in to additional content."}
+          date={"2020-02-03"}
+        />
+        <NoteCard 
+          title={"Special Title Treatment"}
+          note={"With supporting text below as a natural lead-in to additional content."}
+          date={"2020-02-03"}
+        />
+        <NoteCard 
+          title={"Special Title Treatment"}
+          note={"With supporting text below as a natural lead-in to additional content."}
+          date={"2020-02-03"}
+        />
+        <NoteCard 
+          title={"Special Title Treatment"}
+          note={"With supporting text below as a natural lead-in to additional content."}
+          date={"2020-02-03"}
+        />
+        <NoteCard 
+          title={"Special Title Treatment"}
+          note={"With supporting text below as a natural lead-in to additional content."}
+          date={"2020-02-03"}
+        />
       </div>
     )
   }
