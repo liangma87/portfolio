@@ -70,7 +70,7 @@ class Byleth extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: -1,
+      stk_sel: -1,
       stocks: [],
       isModOpen: false,
       modSymbol: "Seiros",
@@ -88,12 +88,13 @@ class Byleth extends React.Component {
     .then((res) => res.json())
     .then((res) => {
       this.setState({stocks: res})
+      this.setState({stk_sel: res[0].id})
     })
     .catch((err) => alert(err));
   }
 
   onStockFilterClick = (stock_id) => {
-    this.setState({ selected: stock_id, stocks: this.state.stocks})
+    this.setState({ stk_sel: stock_id})
   }
 
   onAddTodoClick = () => {
@@ -137,6 +138,7 @@ class Byleth extends React.Component {
 
   render() {
     const stocks = this.state.stocks
+    var isEdelgardOn = true
     
     if(stocks.length <= 0) {
       return (<div>Loading...</div>)
@@ -148,15 +150,15 @@ class Byleth extends React.Component {
         outline
         className='mr-1 mb-1'
         onClick={() => this.onStockFilterClick(stock.id)}
-        active={this.state.selected === stock.id}
+        active={this.state.stk_sel === stock.id}
       >
-        {stock.symbol} <Badge color="secondary">{stock.todos_cnt}</Badge>
+        {stock.symbol}
       </Button>
     )
 
     var selected;
     selected = stocks.filter(stock => 
-      this.state.selected === stock.id || this.state.selected === -1);
+      this.state.stk_sel === stock.id || this.state.stk_sel === -1);
 
     return (
       <div>
@@ -168,7 +170,8 @@ class Byleth extends React.Component {
               outline
               className='mr-1 mb-1'
               onClick={() => this.onStockFilterClick(-1)}
-              active={this.state.selected === -1}
+              active={this.state.stk_sel === -1}
+              disabled={isEdelgardOn}
             >
               All
             </Button>
@@ -185,7 +188,9 @@ class Byleth extends React.Component {
         {/*<Claude 
           stocks={selected}
         />*/}
-        <Edelgard />
+        <Edelgard
+          stock_id={this.state.stk_sel}
+        />
         <AddTodoModal 
           isOpen={this.state.isModOpen}
           onToggleClick={this.onAddTodoClick}

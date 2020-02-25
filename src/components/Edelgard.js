@@ -56,7 +56,12 @@ class Edelgard extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://0.0.0.0:3040/api/diaries")
+    this.fetchDiaries()
+  }
+
+  fetchDiaries = () => {
+    var url = 'http://0.0.0.0:3040/api/diaries/'
+    fetch(url)
     .then((res) => res.json())
     .then((res) => {
       this.setState({diaries: res})
@@ -67,10 +72,16 @@ class Edelgard extends React.Component {
   render() {
 
     const diaries = this.state.diaries
+    var selected = diaries.filter(diary => 
+                  this.props.stock_id === diary.company_id);
+
+    if(selected.length <= 0) {
+      return (<div>Loading.....</div>)
+    }
 
     return (
       <div className="d-flex justify-content-start align-content-start flex-wrap">
-        {diaries.map((diary) => (
+        {selected.map((diary) => (
           <NoteCard
             key={diary.id}
             title={diary.title}
