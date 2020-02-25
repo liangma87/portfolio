@@ -51,56 +51,33 @@ class Edelgard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      notes: []
+      diaries: []
     };
   }
 
   componentDidMount() {
+    fetch("http://0.0.0.0:3040/api/diaries")
+    .then((res) => res.json())
+    .then((res) => {
+      this.setState({diaries: res})
+    })
+    .catch((err) => alert(err));
   }
 
   render() {
+
+    const diaries = this.state.diaries
+
     return (
       <div className="d-flex justify-content-start align-content-start flex-wrap">
-        <NoteCard 
-          title={"Special Title Treatment"}
-          note={"With supporting text below as a natural lead-in to additional content."}
-          date={"2020-02-03"}
-        />
-        <NoteCard 
-          title={"Special Title Treatment"}
-          note={"With supporting text below as a natural lead-in to additional content."}
-          date={"2020-02-03"}
-        />
-        <NoteCard 
-          title={"Special Title Treatment"}
-          note={"With supporting text below as a natural lead-in to additional content."}
-          date={"2020-02-03"}
-        />
-        <NoteCard 
-          title={"Special Title Treatment"}
-          note={"With supporting text below as a natural lead-in to additional content."}
-          date={"2020-02-03"}
-        />
-        <NoteCard 
-          title={"Special Title Treatment"}
-          note={"With supporting text below as a natural lead-in to additional content."}
-          date={"2020-02-03"}
-        />
-        <NoteCard 
-          title={"Special Title Treatment"}
-          note={"With supporting text below as a natural lead-in to additional content."}
-          date={"2020-02-03"}
-        />
-        <NoteCard 
-          title={"Special Title Treatment"}
-          note={"With supporting text below as a natural lead-in to additional content."}
-          date={"2020-02-03"}
-        />
-        <NoteCard 
-          title={"Special Title Treatment"}
-          note={"With supporting text below as a natural lead-in to additional content."}
-          date={"2020-02-03"}
-        />
+        {diaries.map((diary) => (
+          <NoteCard
+            key={diary.id}
+            title={diary.title}
+            note={diary.notes}
+            date={diary.updated_at.split('T')[0]}
+          />
+        ))}
       </div>
     )
   }
