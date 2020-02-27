@@ -50,7 +50,7 @@ const EditDiaryMod = (props) => {
 }
 
 
-const NoteCard = ({title, note, date, diary_id, onEditClick}) => {
+const NoteCard = ({title, note, date, diary_id, onEditClick, onDeleteClick}) => {
 
   const cardStyle = {
       flexGrow: 0,
@@ -67,7 +67,7 @@ const NoteCard = ({title, note, date, diary_id, onEditClick}) => {
           <DropdownItem onClick={() => onEditClick(diary_id)}>
             Edit
           </DropdownItem>
-          <DropdownItem>
+          <DropdownItem onClick={() => onDeleteClick(diary_id)}>
             Delete
           </DropdownItem>
         </DropdownMenu>
@@ -117,7 +117,7 @@ class Edelgard extends React.Component {
     this.setState({isModOpen: !this.state.isModOpen})
   }
 
-  onEditDiarySumbit = (event) => {
+  onDiaryEditSumbit = (event) => {
     event.preventDefault();
     this.onToggleClick()
 
@@ -141,6 +141,22 @@ class Edelgard extends React.Component {
     })
     .catch(error => console.error('Error:', error));
 
+  }
+
+  onDiaryDeleteClick = (diary_id) => {
+    var url = 'http://0.0.0.0:3040/api/diaries/' + diary_id
+    fetch(url, {
+      method: 'DELETE',
+      headers:{
+      'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      var diaries = this.state.diaries
+      var new_diaries = diaries.filter(diary => diary.id !== diary_id)
+      this.setState({diaries: new_diaries})
+    })
+    .catch(error => console.error('Error:', error));
   }
 
   onEditDiaryNotesChange = (event) => {
@@ -168,6 +184,7 @@ class Edelgard extends React.Component {
               date={diary.updated_at.split('T')[0]}
               diary_id={diary.id}
               onEditClick={this.onToggleClick}
+              onDeleteClick={this.onDiaryDeleteClick}
             />
           ))}
         </div>
@@ -176,7 +193,7 @@ class Edelgard extends React.Component {
           stockName={this.props.stock.symbol}
           notes={this.state.modDiaryNotes}
           onNotesChange={this.onEditDiaryNotesChange}
-          onSumbitClick={this.onEditDiarySumbit}
+          onSumbitClick={this.onDiaryEditSumbit}
           onToggleClick={this.onToggleClick}
         />
       </div>
