@@ -7,12 +7,50 @@ import {
   Button,
   Card,
   CardTitle,
-  CardText
+  CardText,
+  Input,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
 } from 'reactstrap';
 
 // Edelgard is a service that renders notes
 
-const NoteCard = ({title, note, date}) => {
+const EditDiaryMod = (props) => {
+  const {
+    isOpen,
+    className,
+    stockName,
+    notes,
+    onToggleClick,
+    onNotesChange,
+    onSumbitClick
+  } = props;
+
+  return (
+    <div>
+      <Modal isOpen={isOpen} toggle={onToggleClick} className={className} >
+        <ModalHeader toggle={onToggleClick}>{stockName}</ModalHeader>
+        <ModalBody>
+          <Input 
+            type="textarea" 
+            value={notes}
+            rows={10}
+            onChange={onNotesChange}
+          />
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={onSumbitClick}>Submit</Button>{' '}
+          <Button color="secondary" onClick={onToggleClick}>Cancel</Button>
+        </ModalFooter>
+      </Modal>
+    </div>
+  );
+}
+
+
+const NoteCard = ({title, note, date, diary_id, onEditClick}) => {
 
   const cardStyle = {
       flexGrow: 0,
@@ -26,7 +64,7 @@ const NoteCard = ({title, note, date}) => {
           {title}
         </DropdownToggle>
         <DropdownMenu>
-          <DropdownItem>
+          <DropdownItem onClick={() => onEditClick(diary_id)}>
             Edit
           </DropdownItem>
           <DropdownItem>
@@ -51,7 +89,10 @@ class Edelgard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      diaries: []
+      diaries: [],
+      isModOpen: false,
+      modDiaryID: -1,
+      modDiaryNotes: "Serios"
     };
   }
 
@@ -64,31 +105,80 @@ class Edelgard extends React.Component {
     fetch(url)
     .then((res) => res.json())
     .then((res) => {
-      this.setState({diaries: res})
+      this.setState({modDiaryID: res[0].id, diaries: res, modDiaryNotes: res[0].notes})
     })
     .catch((err) => alert(err));
+  }
+
+  onToggleClick = (modDiaryID=-1) => {
+    if(!this.state.isModOpen) {
+      this.setState({modDiaryID: modDiaryID})
+    }
+    this.setState({isModOpen: !this.state.isModOpen})
+  }
+
+  onEditDiarySumbit = (event) => {
+    event.preventDefault();
+    this.onToggleClick()
+
+    var url = 'http://0.0.0.0:3040/api/diaries/' + this.state.modDiaryID
+    fetch(url, {
+      method: 'PATCH',
+      body: JSON.stringify({diary: {notes: this.state.modDiaryNotes}}),
+      headers:{
+      'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      res.json()
+    })
+    .then(res => {
+      var diaries = this.state.diaries
+      var index = diaries.findIndex(diary => diary.id === this.state.modDiaryID)
+      diaries[index].notes = this.state.modDiaryNotes
+      diaries[index].updated_at = new Date().toISOString()
+      this.setState({diaries: diaries})
+    })
+    .catch(error => console.error('Error:', error));
+
+  }
+
+  onEditDiaryNotesChange = (event) => {
+    this.setState({modDiaryNotes: event.target.value});
   }
 
   render() {
 
     const diaries = this.state.diaries
     var selected = diaries.filter(diary => 
-                  this.props.stock_id === diary.company_id);
+                  this.props.stock.id === diary.company_id);
 
     if(selected.length <= 0) {
       return (<div>Loading.....</div>)
     }
 
     return (
-      <div className="d-flex justify-content-start align-content-start flex-wrap">
-        {selected.map((diary) => (
-          <NoteCard
-            key={diary.id}
-            title={diary.title}
-            note={diary.notes}
-            date={diary.updated_at.split('T')[0]}
-          />
-        ))}
+      <div>
+        <div className="d-flex justify-content-start align-content-start flex-wrap">
+          {selected.map((diary) => (
+            <NoteCard
+              key={diary.id}
+              title={diary.title}
+              note={diary.notes}
+              date={diary.updated_at.split('T')[0]}
+              diary_id={diary.id}
+              onEditClick={this.onToggleClick}
+            />
+          ))}
+        </div>
+        <EditDiaryMod
+          isOpen={this.state.isModOpen}
+          stockName={this.props.stock.symbol}
+          notes={this.state.modDiaryNotes}
+          onNotesChange={this.onEditDiaryNotesChange}
+          onSumbitClick={this.onEditDiarySumbit}
+          onToggleClick={this.onToggleClick}
+        />
       </div>
     )
   }

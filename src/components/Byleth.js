@@ -70,7 +70,7 @@ class Byleth extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      stk_sel: -1,
+      stk_sel: null,
       stocks: [],
       isModOpen: false,
       modSymbol: "Seiros",
@@ -88,13 +88,13 @@ class Byleth extends React.Component {
     .then((res) => res.json())
     .then((res) => {
       this.setState({stocks: res})
-      this.setState({stk_sel: res[0].id})
+      this.setState({stk_sel: res[0]})
     })
     .catch((err) => alert(err));
   }
 
-  onStockFilterClick = (stock_id) => {
-    this.setState({ stk_sel: stock_id})
+  onStockFilterClick = (stock) => {
+    this.setState({ stk_sel: stock})
   }
 
   onAddTodoClick = () => {
@@ -149,8 +149,8 @@ class Byleth extends React.Component {
         color ="info"
         outline
         className='mr-1 mb-1'
-        onClick={() => this.onStockFilterClick(stock.id)}
-        active={this.state.stk_sel === stock.id}
+        onClick={() => this.onStockFilterClick(stock)}
+        active={this.state.stk_sel && this.state.stk_sel.id === stock.id}
       >
         {stock.symbol}
       </Button>
@@ -158,7 +158,7 @@ class Byleth extends React.Component {
 
     var selected;
     selected = stocks.filter(stock => 
-      this.state.stk_sel === stock.id || this.state.stk_sel === -1);
+       this.state.stk_sel === null || this.state.stk_sel.id === stock.id);
 
     return (
       <div>
@@ -169,8 +169,8 @@ class Byleth extends React.Component {
               color ="info"
               outline
               className='mr-1 mb-1'
-              onClick={() => this.onStockFilterClick(-1)}
-              active={this.state.stk_sel === -1}
+              onClick={() => this.onStockFilterClick(null)}
+              active={this.state.stk_sel === null}
               disabled={isEdelgardOn}
             >
               All
@@ -189,7 +189,7 @@ class Byleth extends React.Component {
           stocks={selected}
         />*/}
         <Edelgard
-          stock_id={this.state.stk_sel}
+          stock={this.state.stk_sel}
         />
         <AddTodoModal 
           isOpen={this.state.isModOpen}
