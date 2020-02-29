@@ -9,15 +9,26 @@ class App extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+        navItem: "Todos"
+    };
   };
 
+  onNavItemsChange = (item) => {
+    this.setState({navItem: item});
+  }
   render() {
     
     return (
       <div className="App">
-        <Header />
+        <Header 
+          onNavItemsClick={this.onNavItemsChange}
+          navItem={this.state.navItem}
+        />
         <div className='mr-3 ml-3'>
-          <Byleth />
+          <Byleth
+            navItem={this.state.navItem}
+          />
         </div>
         {/*<Col sm={{ size: 10, offset: 1 }}>
           <ChartComponent

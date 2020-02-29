@@ -133,12 +133,10 @@ class Byleth extends React.Component {
       this.fetchAllTodos()
     })
     .catch(error => console.error('Error:', error));
-
   }
 
   render() {
     const stocks = this.state.stocks
-    var isEdelgardOn = true
     
     if(stocks.length <= 0) {
       return (<div>Loading...</div>)
@@ -160,6 +158,13 @@ class Byleth extends React.Component {
     selected = stocks.filter(stock => 
        this.state.stk_sel === null || this.state.stk_sel.id === stock.id);
 
+    var service;
+    if(this.props.navItem==="Todos") {
+      service = <Claude stocks={selected}/>
+    } else if(this.props.navItem==="Diaries") {
+      service = <Edelgard stock={this.state.stk_sel}/>
+    }
+
     return (
       <div>
         <div className="d-flex justify-content-between mb-3">
@@ -171,7 +176,7 @@ class Byleth extends React.Component {
               className='mr-1 mb-1'
               onClick={() => this.onStockFilterClick(null)}
               active={this.state.stk_sel === null}
-              disabled={isEdelgardOn}
+              disabled={this.props.navItem==="Diaries"}
             >
               All
             </Button>
@@ -185,12 +190,7 @@ class Byleth extends React.Component {
             </Button>
           </div>
         </div>
-        {/*<Claude 
-          stocks={selected}
-        />*/}
-        <Edelgard
-          stock={this.state.stk_sel}
-        />
+        {service}
         <AddTodoModal 
           isOpen={this.state.isModOpen}
           onToggleClick={this.onAddTodoClick}
