@@ -23,6 +23,7 @@ import { Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 const AddTodoModal = (props) => {
   const {
     isOpen,
+    title,
     className,
     onToggleClick,
     onSymbolChange,
@@ -31,10 +32,21 @@ const AddTodoModal = (props) => {
     onSumbitClick
   } = props;
 
+  var today = new Date().toISOString().split('T')[0]
+  var dateInput = <div>{today}</div>
+  if(title==="Todos"){
+    dateInput = <Input
+              type="date"
+              name="date"
+              id="exampleDate"
+              onChange={onDateChange}
+              />
+  }
+
   return (
     <div>
       <Modal isOpen={isOpen} toggle={onToggleClick} className={className} >
-        <ModalHeader toggle={onToggleClick}>{"Add Todo"}</ModalHeader>
+        <ModalHeader toggle={onToggleClick}>{title}</ModalHeader>
         <ModalBody>
           <Input 
             type="textarea" 
@@ -48,12 +60,7 @@ const AddTodoModal = (props) => {
             rows={5}
             onChange={onNotesChange}
           />
-          <Input
-            type="date"
-            name="date"
-            id="exampleDate"
-            onChange={onDateChange}
-          />
+          {dateInput}
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={onSumbitClick}>Submit</Button>{' '}
@@ -118,10 +125,16 @@ class Byleth extends React.Component {
     this.setState({isModOpen: !this.state.isModOpen})
 
     var url = 'http://0.0.0.0:3040/api/todos/' + this.state.modSymbol
+    var content = {todo: { completion_date: this.state.modDate,
+                                    notes: this.state.modNotes}}
+    if(this.props.navItem==="Diaries") {
+      url = 'http://0.0.0.0:3040/api/diaries/' + this.state.modSymbol
+      content = {diary: {notes: this.state.modNotes}}
+    }
+
     fetch(url, {
       method: 'POST',
-      body: JSON.stringify({todo: { completion_date: this.state.modDate,
-                                    notes: this.state.modNotes}}),
+      body: JSON.stringify(content),
       headers:{
       'Content-Type': 'application/json'
       }
@@ -193,6 +206,7 @@ class Byleth extends React.Component {
         {service}
         <AddTodoModal 
           isOpen={this.state.isModOpen}
+          title={this.props.navItem}
           onToggleClick={this.onAddTodoClick}
           onSymbolChange={this.onSymbolChange}
           onNotesChange={this.onNotesChange}
