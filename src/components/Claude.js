@@ -69,7 +69,7 @@ class Claude extends React.Component {
 
   componentDidMount() {
 
-    fetch("http://0.0.0.0:3040/api/todos")
+    fetch("https://liang-stock-api.herokuapp.com/api/todos")
     .then((res) => res.json())
     .then((res) => {
       this.setState({todos: res})
@@ -91,7 +91,7 @@ class Claude extends React.Component {
 
     this.setState({isModOpen: !this.state.isModOpen})
 
-    var url = 'http://0.0.0.0:3040/api/todos/' + this.state.modTodoID
+    var url = 'https://liang-stock-api.herokuapp.com/api/todos/' + this.state.modTodoID
     fetch(url, {
       method: 'PATCH',
       body: JSON.stringify({todo: { completion_date: this.state.modTodoDate,
@@ -130,7 +130,7 @@ class Claude extends React.Component {
   }
 
   onModDoneClick = (todo_id) => {
-    var url = 'http://0.0.0.0:3040/api/todos/' + todo_id
+    var url = 'https://liang-stock-api.herokuapp.com/api/todos/' + todo_id
     fetch(url, {
       method: 'DELETE',
       headers:{

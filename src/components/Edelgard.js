@@ -101,7 +101,7 @@ class Edelgard extends React.Component {
   }
 
   fetchDiaries = () => {
-    var url = 'http://0.0.0.0:3040/api/diaries/'
+    var url = 'https://liang-stock-api.herokuapp.com/api/diaries/'
     fetch(url)
     .then((res) => res.json())
     .then((res) => {
@@ -121,7 +121,7 @@ class Edelgard extends React.Component {
     event.preventDefault();
     this.onToggleClick()
 
-    var url = 'http://0.0.0.0:3040/api/diaries/' + this.state.modDiaryID
+    var url = 'https://liang-stock-api.herokuapp.com/api/diaries/' + this.state.modDiaryID
     fetch(url, {
       method: 'PATCH',
       body: JSON.stringify({diary: {notes: this.state.modDiaryNotes}}),
@@ -144,7 +144,7 @@ class Edelgard extends React.Component {
   }
 
   onDiaryDeleteClick = (diary_id) => {
-    var url = 'http://0.0.0.0:3040/api/diaries/' + diary_id
+    var url = 'https://liang-stock-api.herokuapp.com/api/diaries/' + diary_id
     fetch(url, {
       method: 'DELETE',
       headers:{

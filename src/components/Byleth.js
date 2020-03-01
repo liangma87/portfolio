@@ -94,7 +94,8 @@ class Byleth extends React.Component {
   }
 
   fetchAllTodos = () => {
-    fetch("http://0.0.0.0:3040/api/companies")
+    //http://0.0.0.0:3040/api/companies
+    fetch("https://liang-stock-api.herokuapp.com/api/companies")
     .then((res) => res.json())
     .then((res) => {
       this.setState({choice: res[0],stocks: res})
@@ -126,11 +127,11 @@ class Byleth extends React.Component {
     event.preventDefault();
     this.setState({isModOpen: !this.state.isModOpen})
 
-    var url = 'http://0.0.0.0:3040/api/todos/' + this.state.modSymbol
+    var url = 'https://liang-stock-api.herokuapp.com/api/todos/' + this.state.modSymbol
     var content = {todo: { completion_date: this.state.modDate,
                                     notes: this.state.modNotes}}
     if(this.props.navItem==="Diaries") {
-      url = 'http://0.0.0.0:3040/api/diaries/' + this.state.modSymbol
+      url = 'https://liang-stock-api.herokuapp.com/api/diaries/' + this.state.modSymbol
       content = {diary: {notes: this.state.modNotes}}
     }
 
