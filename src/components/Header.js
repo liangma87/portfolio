@@ -1,12 +1,21 @@
 import React, { Component } from 'react';
-import { Collapse, Navbar, NavbarToggler, Nav, NavItem} from 'reactstrap';
-import { Button } from 'reactstrap';
+import {
+  Button,
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  Nav,
+  NavItem,
+  UncontrolledDropdown,
+  DropdownItem,
+  DropdownToggle,
+  DropdownMenu
+} from 'reactstrap';
+import { Link } from 'react-router-dom';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import { faSearch } from '@fortawesome/free-solid-svg-icons';
 //import classnames from 'classnames';
-import { NavLink, Link } from 'react-router-dom';
 import AuthService from './auth/AuthService';
-
 
 class Header extends Component {
   constructor(props) {
@@ -14,10 +23,8 @@ class Header extends Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-        isOpen: false,
-        activeTab: '1',
+        isOpen: false
     };
-
     this.auth = new AuthService();
   }
 
@@ -25,13 +32,6 @@ class Header extends Component {
       this.setState({
           isOpen: !this.state.isOpen
       });
-  }
-
-  onToggleTab(tab) {
-    this.setState({
-      activeTab: tab
-    });
-    this.props.toggleTab(tab);
   }
 
   userLogout() {
@@ -45,38 +45,21 @@ class Header extends Component {
     return (
       <div className="Header">
         <Navbar color="inverse" fixed-top light expand="md">
-          {/*<NavbarBrand href="/">Home</NavbarBrand>*/}
           <NavbarToggler onClick={this.toggle} className="mr-2"/>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="mr-auto text-left" tabs>
-              <NavItem>
-                  <NavLink
-                    to = {'/'}
-                    className="nav-link"
-                    activeClassName="active"
-                  >
-                    Bagger-Research
-                  </NavLink>
-              </NavItem>
+              <UncontrolledDropdown nav>
+                <DropdownToggle nav caret>
+                  {this.props.navItem}
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem onClick={() => this.props.onNavItemsClick("Todos")}>Todos</DropdownItem>
+                  <DropdownItem divider />
+                  <DropdownItem onClick={() => this.props.onNavItemsClick("Diaries")}>Diaries</DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
             </Nav>
             <Nav className="ml-auto text-left" navbar>
-              {/*<NavItem>
-                <Form inline>
-                  <FormGroup>
-                    <InputGroup>
-                    <Input
-                      type="search"
-                      name="search"
-                      id="stockSearch"
-                      placeholder="Search by symbol"
-                    />
-                    <InputGroupAddon addonType="append">
-                      <Button color="link"><FontAwesomeIcon icon={faSearch} /></Button>
-                    </InputGroupAddon>
-                    </InputGroup>
-                  </FormGroup>
-                </Form>
-              </NavItem>*/}
               <NavItem>
                   {isLoggedIn ? (
                     <Button

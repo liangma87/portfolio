@@ -1,10 +1,14 @@
 import React from 'react'
-import { 
-  Badge,
-  Button,
-} from 'reactstrap';
 import Claude from './Claude'
-import { Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import Edelgard from './Edelgard'
+import {
+  Button,
+  Input, 
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
+} from 'reactstrap';
 
 // AIs for next 3 months
 // 1, complete research-todo cards features
@@ -19,9 +23,10 @@ import { Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 // Byleth holds the stock symbol data, the todos/diaries state are hold by 
 // Claude/Edelgard
 
-const AddTodoModal = (props) => {
+const AddModal = (props) => {
   const {
     isOpen,
+    title,
     className,
     onToggleClick,
     onSymbolChange,
@@ -30,10 +35,21 @@ const AddTodoModal = (props) => {
     onSumbitClick
   } = props;
 
+  var today = new Date().toISOString().split('T')[0]
+  var dateInput = <div>{today}</div>
+  if(title==="Todos"){
+    dateInput = <Input
+              type="date"
+              name="date"
+              id="exampleDate"
+              onChange={onDateChange}
+              />
+  }
+
   return (
     <div>
       <Modal isOpen={isOpen} toggle={onToggleClick} className={className} >
-        <ModalHeader toggle={onToggleClick}>{"Add Todo"}</ModalHeader>
+        <ModalHeader toggle={onToggleClick}>{title}</ModalHeader>
         <ModalBody>
           <Input 
             type="textarea" 
@@ -47,12 +63,7 @@ const AddTodoModal = (props) => {
             rows={5}
             onChange={onNotesChange}
           />
-          <Input
-            type="date"
-            name="date"
-            id="exampleDate"
-            onChange={onDateChange}
-          />
+          {dateInput}
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={onSumbitClick}>Submit</Button>{' '}
@@ -69,7 +80,7 @@ class Byleth extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: -1,
+      choice: null,
       stocks: [],
       isModOpen: false,
       modSymbol: "Seiros",
@@ -86,16 +97,16 @@ class Byleth extends React.Component {
     fetch("http://0.0.0.0:3040/api/companies")
     .then((res) => res.json())
     .then((res) => {
-      this.setState({stocks: res})
+      this.setState({choice: res[0],stocks: res})
     })
     .catch((err) => alert(err));
   }
 
-  onStockFilterClick = (stock_id) => {
-    this.setState({ selected: stock_id, stocks: this.state.stocks})
+  onStockFilterClick = (stock) => {
+    this.setState({ choice: stock})
   }
 
-  onAddTodoClick = () => {
+  onAddModClick = () => {
     this.setState({isModOpen: !this.state.isModOpen})
   }
 
@@ -116,10 +127,16 @@ class Byleth extends React.Component {
     this.setState({isModOpen: !this.state.isModOpen})
 
     var url = 'http://0.0.0.0:3040/api/todos/' + this.state.modSymbol
+    var content = {todo: { completion_date: this.state.modDate,
+                                    notes: this.state.modNotes}}
+    if(this.props.navItem==="Diaries") {
+      url = 'http://0.0.0.0:3040/api/diaries/' + this.state.modSymbol
+      content = {diary: {notes: this.state.modNotes}}
+    }
+
     fetch(url, {
       method: 'POST',
-      body: JSON.stringify({todo: { completion_date: this.state.modDate,
-                                    notes: this.state.modNotes}}),
+      body: JSON.stringify(content),
       headers:{
       'Content-Type': 'application/json'
       }
@@ -131,7 +148,6 @@ class Byleth extends React.Component {
       this.fetchAllTodos()
     })
     .catch(error => console.error('Error:', error));
-
   }
 
   render() {
@@ -146,16 +162,23 @@ class Byleth extends React.Component {
         color ="info"
         outline
         className='mr-1 mb-1'
-        onClick={() => this.onStockFilterClick(stock.id)}
-        active={this.state.selected === stock.id}
+        onClick={() => this.onStockFilterClick(stock)}
+        active={this.state.choice && this.state.choice.id === stock.id}
       >
-        {stock.symbol} <Badge color="secondary">{stock.todos_cnt}</Badge>
+        {stock.symbol}
       </Button>
     )
 
     var selected;
     selected = stocks.filter(stock => 
-      this.state.selected === stock.id || this.state.selected === -1);
+       this.state.choice === null || this.state.choice.id === stock.id);
+
+    var service;
+    if(this.props.navItem==="Todos") {
+      service = <Claude stocks={selected}/>
+    } else if(this.props.navItem==="Diaries") {
+      service = <Edelgard stock={this.state.choice}/>
+    }
 
     return (
       <div>
@@ -166,8 +189,9 @@ class Byleth extends React.Component {
               color ="info"
               outline
               className='mr-1 mb-1'
-              onClick={() => this.onStockFilterClick(-1)}
-              active={this.state.selected === -1}
+              onClick={() => this.onStockFilterClick(null)}
+              active={this.state.choice === null}
+              disabled={this.props.navItem==="Diaries"}
             >
               All
             </Button>
@@ -175,18 +199,17 @@ class Byleth extends React.Component {
               color ="success"
               outline
               className='mr-1 mb-1'
-              onClick={() => this.onAddTodoClick()}
+              onClick={() => this.onAddModClick()}
             >
               Add
             </Button>
           </div>
         </div>
-        <Claude 
-          stocks={selected}
-        />
-        <AddTodoModal 
+        {service}
+        <AddModal 
           isOpen={this.state.isModOpen}
-          onToggleClick={this.onAddTodoClick}
+          title={this.props.navItem}
+          onToggleClick={this.onAddModClick}
           onSymbolChange={this.onSymbolChange}
           onNotesChange={this.onNotesChange}
           onDateChange={this.onDateChange}
