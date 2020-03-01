@@ -11,7 +11,7 @@ import {
   DropdownToggle,
   DropdownMenu
 } from 'reactstrap';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import { faSearch } from '@fortawesome/free-solid-svg-icons';
 //import classnames from 'classnames';

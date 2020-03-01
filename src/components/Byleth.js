@@ -1,11 +1,14 @@
 import React from 'react'
-import { 
-  Badge,
-  Button,
-} from 'reactstrap';
 import Claude from './Claude'
 import Edelgard from './Edelgard'
-import { Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {
+  Button,
+  Input, 
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
+} from 'reactstrap';
 
 // AIs for next 3 months
 // 1, complete research-todo cards features
@@ -20,7 +23,7 @@ import { Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 // Byleth holds the stock symbol data, the todos/diaries state are hold by 
 // Claude/Edelgard
 
-const AddTodoModal = (props) => {
+const AddModal = (props) => {
   const {
     isOpen,
     title,
@@ -77,7 +80,7 @@ class Byleth extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      stk_sel: null,
+      choice: null,
       stocks: [],
       isModOpen: false,
       modSymbol: "Seiros",
@@ -94,17 +97,16 @@ class Byleth extends React.Component {
     fetch("http://0.0.0.0:3040/api/companies")
     .then((res) => res.json())
     .then((res) => {
-      this.setState({stocks: res})
-      this.setState({stk_sel: res[0]})
+      this.setState({choice: res[0],stocks: res})
     })
     .catch((err) => alert(err));
   }
 
   onStockFilterClick = (stock) => {
-    this.setState({ stk_sel: stock})
+    this.setState({ choice: stock})
   }
 
-  onAddTodoClick = () => {
+  onAddModClick = () => {
     this.setState({isModOpen: !this.state.isModOpen})
   }
 
@@ -161,7 +163,7 @@ class Byleth extends React.Component {
         outline
         className='mr-1 mb-1'
         onClick={() => this.onStockFilterClick(stock)}
-        active={this.state.stk_sel && this.state.stk_sel.id === stock.id}
+        active={this.state.choice && this.state.choice.id === stock.id}
       >
         {stock.symbol}
       </Button>
@@ -169,13 +171,13 @@ class Byleth extends React.Component {
 
     var selected;
     selected = stocks.filter(stock => 
-       this.state.stk_sel === null || this.state.stk_sel.id === stock.id);
+       this.state.choice === null || this.state.choice.id === stock.id);
 
     var service;
     if(this.props.navItem==="Todos") {
       service = <Claude stocks={selected}/>
     } else if(this.props.navItem==="Diaries") {
-      service = <Edelgard stock={this.state.stk_sel}/>
+      service = <Edelgard stock={this.state.choice}/>
     }
 
     return (
@@ -188,7 +190,7 @@ class Byleth extends React.Component {
               outline
               className='mr-1 mb-1'
               onClick={() => this.onStockFilterClick(null)}
-              active={this.state.stk_sel === null}
+              active={this.state.choice === null}
               disabled={this.props.navItem==="Diaries"}
             >
               All
@@ -197,17 +199,17 @@ class Byleth extends React.Component {
               color ="success"
               outline
               className='mr-1 mb-1'
-              onClick={() => this.onAddTodoClick()}
+              onClick={() => this.onAddModClick()}
             >
               Add
             </Button>
           </div>
         </div>
         {service}
-        <AddTodoModal 
+        <AddModal 
           isOpen={this.state.isModOpen}
           title={this.props.navItem}
-          onToggleClick={this.onAddTodoClick}
+          onToggleClick={this.onAddModClick}
           onSymbolChange={this.onSymbolChange}
           onNotesChange={this.onNotesChange}
           onDateChange={this.onDateChange}
