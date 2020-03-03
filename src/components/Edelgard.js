@@ -14,6 +14,7 @@ import {
   ModalBody,
   ModalFooter
 } from 'reactstrap';
+import { getStockApiUrl } from "../helpers/utils.js";
 
 // Edelgard is a service that renders notes
 
@@ -101,7 +102,7 @@ class Edelgard extends React.Component {
   }
 
   fetchDiaries = () => {
-    var url = 'https://liang-stock-api.herokuapp.com/api/diaries/'
+    var url = getStockApiUrl("diaries")
     fetch(url)
     .then((res) => res.json())
     .then((res) => {
@@ -121,7 +122,7 @@ class Edelgard extends React.Component {
     event.preventDefault();
     this.onToggleClick()
 
-    var url = 'https://liang-stock-api.herokuapp.com/api/diaries/' + this.state.modDiaryID
+    var url = getStockApiUrl("diaries") + this.state.modDiaryID
     fetch(url, {
       method: 'PATCH',
       body: JSON.stringify({diary: {notes: this.state.modDiaryNotes}}),
@@ -144,7 +145,7 @@ class Edelgard extends React.Component {
   }
 
   onDiaryDeleteClick = (diary_id) => {
-    var url = 'https://liang-stock-api.herokuapp.com/api/diaries/' + diary_id
+    var url = getStockApiUrl("diaries") + diary_id
     fetch(url, {
       method: 'DELETE',
       headers:{
@@ -169,6 +170,7 @@ class Edelgard extends React.Component {
     var selected = diaries.filter(diary => 
                   this.props.stock.id === diary.company_id);
 
+    // How do you distinguish between diaries not fetched or no diaries
     if(selected.length <= 0) {
       return (<div>Loading.....</div>)
     }

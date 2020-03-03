@@ -9,6 +9,7 @@ import {
   ModalBody,
   ModalFooter
 } from 'reactstrap';
+import { getStockApiUrl } from "../helpers/utils.js";
 
 // AIs for next 3 months
 // 1, complete research-todo cards features
@@ -94,8 +95,8 @@ class Byleth extends React.Component {
   }
 
   fetchAllTodos = () => {
-    //http://0.0.0.0:3040/api/companies
-    fetch("https://liang-stock-api.herokuapp.com/api/companies")
+    var url = getStockApiUrl("companies")
+    fetch(url)
     .then((res) => res.json())
     .then((res) => {
       this.setState({choice: res[0],stocks: res})
@@ -127,11 +128,11 @@ class Byleth extends React.Component {
     event.preventDefault();
     this.setState({isModOpen: !this.state.isModOpen})
 
-    var url = 'https://liang-stock-api.herokuapp.com/api/todos/' + this.state.modSymbol
+    var url = getStockApiUrl("todos") + this.state.modSymbol
     var content = {todo: { completion_date: this.state.modDate,
                                     notes: this.state.modNotes}}
     if(this.props.navItem==="Diaries") {
-      url = 'https://liang-stock-api.herokuapp.com/api/diaries/' + this.state.modSymbol
+      url = getStockApiUrl("diaries") + this.state.modSymbol
       content = {diary: {notes: this.state.modNotes}}
     }
 

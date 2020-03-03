@@ -9,6 +9,7 @@ import {
   ModalBody,
   ModalFooter
 } from 'reactstrap';
+import { getStockApiUrl } from "../helpers/utils.js";
 
 // Claude is a service that renders todo list
 const EditTodoMod = (props) => {
@@ -68,8 +69,8 @@ class Claude extends React.Component {
   }
 
   componentDidMount() {
-
-    fetch("https://liang-stock-api.herokuapp.com/api/todos")
+    var url = getStockApiUrl("todos")
+    fetch(url)
     .then((res) => res.json())
     .then((res) => {
       this.setState({todos: res})
@@ -91,7 +92,7 @@ class Claude extends React.Component {
 
     this.setState({isModOpen: !this.state.isModOpen})
 
-    var url = 'https://liang-stock-api.herokuapp.com/api/todos/' + this.state.modTodoID
+    var url = getStockApiUrl("todos")+ this.state.modTodoID
     fetch(url, {
       method: 'PATCH',
       body: JSON.stringify({todo: { completion_date: this.state.modTodoDate,
@@ -130,7 +131,7 @@ class Claude extends React.Component {
   }
 
   onModDoneClick = (todo_id) => {
-    var url = 'https://liang-stock-api.herokuapp.com/api/todos/' + todo_id
+    var url = getStockApiUrl("todos") + todo_id
     fetch(url, {
       method: 'DELETE',
       headers:{

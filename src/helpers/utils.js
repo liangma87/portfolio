@@ -23,3 +23,12 @@ export function getData(symbol) {
     .then(data => tsvParse(data, parseData(parseDate)))
   return promiseSymbol;
 }
+
+export function getStockApiUrl(endpoint) {
+  var url = "https://liang-stock-api.herokuapp.com/api/"
+  if (process.env.NODE_ENV !== 'production') {
+    url = "http://0.0.0.0:3040/api/"
+  }
+  url += endpoint + "/"
+  return url
+}
