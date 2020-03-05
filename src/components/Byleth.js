@@ -33,11 +33,13 @@ const AddModal = (props) => {
     onSymbolChange,
     onNotesChange,
     onDateChange,
+    onTitleChange,
     onSumbitClick
   } = props;
 
   var today = new Date().toISOString().split('T')[0]
   var dateInput = <div>{today}</div>
+  var titleInput = null
   if(title==="Todos"){
     dateInput = <Input
               type="date"
@@ -45,6 +47,14 @@ const AddModal = (props) => {
               id="exampleDate"
               onChange={onDateChange}
               />
+  }
+  if(title==="Diaries"){
+    titleInput = <Input 
+                type="textarea" 
+                placeholder={"Title"}
+                rows={1}
+                onChange={onTitleChange}
+                />
   }
 
   return (
@@ -54,13 +64,14 @@ const AddModal = (props) => {
         <ModalBody>
           <Input 
             type="textarea" 
-            placeholder={"Enter stock symbol here"}
+            placeholder={"Stock Symbol"}
             rows={1}
             onChange={onSymbolChange}
           />
+          {titleInput}
           <Input 
             type="textarea" 
-            placeholder={"Enter todo notes here"}
+            placeholder={"Notes"}
             rows={5}
             onChange={onNotesChange}
           />
@@ -86,7 +97,8 @@ class Byleth extends React.Component {
       isModOpen: false,
       modSymbol: "Seiros",
       modNotes: "Seiros",
-      modDate: "02-02-2020" 
+      modDate: "02-02-2020",
+      modTitle: "Seiros"
     };
   }
 
@@ -124,6 +136,10 @@ class Byleth extends React.Component {
     this.setState({modDate: event.target.value});
   }
 
+  onTitleChange = (event) => {
+    this.setState({modTitle: event.target.value});
+  }
+
   onModSubmitClick = (event) => {
     event.preventDefault();
     this.setState({isModOpen: !this.state.isModOpen})
@@ -133,7 +149,7 @@ class Byleth extends React.Component {
                                     notes: this.state.modNotes}}
     if(this.props.navItem==="Diaries") {
       url = getStockApiUrl("diaries") + this.state.modSymbol
-      content = {diary: {notes: this.state.modNotes}}
+      content = {diary: {notes: this.state.modNotes, title: this.state.modTitle}}
     }
 
     fetch(url, {
@@ -215,6 +231,7 @@ class Byleth extends React.Component {
           onSymbolChange={this.onSymbolChange}
           onNotesChange={this.onNotesChange}
           onDateChange={this.onDateChange}
+          onTitleChange={this.onTitleChange}
           onSumbitClick={this.onModSubmitClick}
         />
       </div>

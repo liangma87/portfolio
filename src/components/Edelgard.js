@@ -23,6 +23,7 @@ const EditDiaryMod = (props) => {
     isOpen,
     className,
     stockName,
+    title,
     notes,
     onToggleClick,
     onNotesChange,
@@ -34,6 +35,7 @@ const EditDiaryMod = (props) => {
       <Modal isOpen={isOpen} toggle={onToggleClick} className={className} >
         <ModalHeader toggle={onToggleClick}>{stockName}</ModalHeader>
         <ModalBody>
+          <p>{title}</p>          
           <Input 
             type="textarea" 
             value={notes}
@@ -93,7 +95,8 @@ class Edelgard extends React.Component {
       diaries: [],
       isModOpen: false,
       modDiaryID: -1,
-      modDiaryNotes: "Serios"
+      modDiaryNotes: "Serios",
+      modDiaryTitle: "Serios"
     };
   }
 
@@ -113,7 +116,9 @@ class Edelgard extends React.Component {
 
   onToggleClick = (modDiaryID=-1) => {
     if(!this.state.isModOpen) {
-      this.setState({modDiaryID: modDiaryID})
+      var diary = this.state.diaries.filter(diary => 
+                        diary.id === modDiaryID);
+      this.setState({modDiaryID: modDiaryID, modDiaryNotes: diary[0].notes, modDiaryTitle: diary[0].title})
     }
     this.setState({isModOpen: !this.state.isModOpen})
   }
@@ -194,6 +199,7 @@ class Edelgard extends React.Component {
           isOpen={this.state.isModOpen}
           stockName={this.props.stock.symbol}
           notes={this.state.modDiaryNotes}
+          title={this.state.modDiaryTitle}
           onNotesChange={this.onEditDiaryNotesChange}
           onSumbitClick={this.onDiaryEditSumbit}
           onToggleClick={this.onToggleClick}
