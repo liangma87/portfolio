@@ -53,9 +53,10 @@ class Header extends Component {
                   {this.props.navItem}
                 </DropdownToggle>
                 <DropdownMenu>
+                  {/*"TODO", "Thoughts" should be moved to global constants*/}
                   <DropdownItem onClick={() => this.props.onNavItemsClick("Todos")}>Todos</DropdownItem>
                   <DropdownItem divider />
-                  <DropdownItem onClick={() => this.props.onNavItemsClick("Diaries")}>Diaries</DropdownItem>
+                  <DropdownItem onClick={() => this.props.onNavItemsClick("Thoughts")}>Thoughts</DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>

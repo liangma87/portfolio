@@ -12,16 +12,16 @@ import {
 import { getStockApiUrl } from "../helpers/utils.js";
 
 // AIs for next 3 months
-// 1, complete research-todo cards features
-// 2, complete research-diary cards features
+// 1, complete research-todos cards features
+// 2, complete research-thoughts cards features
 // 3, complete auth feature to secure the application
 
 // Byleth is the container for the following houses
 // (1) Claude reprents research-todos
-// (2) Edelgard represnts research-diaries
+// (2) Edelgard represnts research-thoughts
 // (3) Dimitri represents research-charts
 
-// Byleth holds the stock symbol data, the todos/diaries state are hold by 
+// Byleth holds the stock symbol data, the todos/thoughts state are hold by 
 // Claude/Edelgard
 
 const AddModal = (props) => {
@@ -48,7 +48,7 @@ const AddModal = (props) => {
               onChange={onDateChange}
               />
   }
-  if(title==="Diaries"){
+  if(title==="Thoughts"){
     titleInput = <Input 
                 type="textarea" 
                 placeholder={"Title"}
@@ -145,11 +145,11 @@ class Byleth extends React.Component {
     this.setState({isModOpen: !this.state.isModOpen})
 
     var url = getStockApiUrl("todos") + this.state.modSymbol
-    var content = {todo: { completion_date: this.state.modDate,
+    var content = {todo: { date: this.state.modDate,
                                     notes: this.state.modNotes}}
-    if(this.props.navItem==="Diaries") {
-      url = getStockApiUrl("diaries") + this.state.modSymbol
-      content = {diary: {notes: this.state.modNotes, title: this.state.modTitle}}
+    if(this.props.navItem==="Thoughts") {
+      url = getStockApiUrl("thoughts") + this.state.modSymbol
+      content = {thought: {notes: this.state.modNotes, title: this.state.modTitle}}
     }
 
     fetch(url, {
@@ -194,7 +194,7 @@ class Byleth extends React.Component {
     var service;
     if(this.props.navItem==="Todos") {
       service = <Claude stocks={selected}/>
-    } else if(this.props.navItem==="Diaries") {
+    } else if(this.props.navItem==="Thoughts") {
       service = <Edelgard stock={this.state.choice}/>
     }
 
@@ -209,7 +209,7 @@ class Byleth extends React.Component {
               className='mr-1 mb-1'
               onClick={() => this.onStockFilterClick(null)}
               active={this.state.choice === null}
-              disabled={this.props.navItem==="Diaries"}
+              disabled={this.props.navItem==="Thoughts"}
             >
               All
             </Button>

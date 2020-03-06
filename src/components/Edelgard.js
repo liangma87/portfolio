@@ -18,7 +18,7 @@ import { getStockApiUrl } from "../helpers/utils.js";
 
 // Edelgard is a service that renders notes
 
-const EditDiaryMod = (props) => {
+const EditThoughtMod = (props) => {
   const {
     isOpen,
     className,
@@ -53,7 +53,7 @@ const EditDiaryMod = (props) => {
 }
 
 
-const NoteCard = ({title, note, date, diary_id, onEditClick, onDeleteClick}) => {
+const NoteCard = ({title, note, date, thought_id, onEditClick, onDeleteClick}) => {
 
   const cardStyle = {
       flexGrow: 0,
@@ -67,10 +67,10 @@ const NoteCard = ({title, note, date, diary_id, onEditClick, onDeleteClick}) => 
           {title}
         </DropdownToggle>
         <DropdownMenu>
-          <DropdownItem onClick={() => onEditClick(diary_id)}>
+          <DropdownItem onClick={() => onEditClick(thought_id)}>
             Edit
           </DropdownItem>
-          <DropdownItem onClick={() => onDeleteClick(diary_id)}>
+          <DropdownItem onClick={() => onDeleteClick(thought_id)}>
             Delete
           </DropdownItem>
         </DropdownMenu>
@@ -92,45 +92,45 @@ class Edelgard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      diaries: [],
+      thoughts: [],
       isModOpen: false,
-      modDiaryID: -1,
-      modDiaryNotes: "Serios",
-      modDiaryTitle: "Serios"
+      modThoughtID: -1,
+      modThoughtNotes: "Serios",
+      modThoughtTitle: "Serios"
     };
   }
 
   componentDidMount() {
-    this.fetchDiaries()
+    this.fetchThoughts()
   }
 
-  fetchDiaries = () => {
-    var url = getStockApiUrl("diaries")
+  fetchThoughts = () => {
+    var url = getStockApiUrl("thoughts")
     fetch(url)
     .then((res) => res.json())
     .then((res) => {
-      this.setState({modDiaryID: res[0].id, diaries: res, modDiaryNotes: res[0].notes})
+      this.setState({modThoughtID: res[0].id, thoughts: res, modThoughtNotes: res[0].notes})
     })
     .catch((err) => alert(err));
   }
 
-  onToggleClick = (modDiaryID=-1) => {
+  onToggleClick = (modThoughtID=-1) => {
     if(!this.state.isModOpen) {
-      var diary = this.state.diaries.filter(diary => 
-                        diary.id === modDiaryID);
-      this.setState({modDiaryID: modDiaryID, modDiaryNotes: diary[0].notes, modDiaryTitle: diary[0].title})
+      var thought = this.state.thoughts.filter(thought => 
+                        thought.id === modThoughtID);
+      this.setState({modThoughtID: modThoughtID, modThoughtNotes: thought[0].notes, modThoughtTitle: thought[0].title})
     }
     this.setState({isModOpen: !this.state.isModOpen})
   }
 
-  onDiaryEditSumbit = (event) => {
+  onThoughtEditSumbit = (event) => {
     event.preventDefault();
     this.onToggleClick()
 
-    var url = getStockApiUrl("diaries") + this.state.modDiaryID
+    var url = getStockApiUrl("thoughts") + this.state.modThoughtID
     fetch(url, {
       method: 'PATCH',
-      body: JSON.stringify({diary: {notes: this.state.modDiaryNotes}}),
+      body: JSON.stringify({thought: {notes: this.state.modThoughtNotes}}),
       headers:{
       'Content-Type': 'application/json'
       }
@@ -139,18 +139,18 @@ class Edelgard extends React.Component {
       res.json()
     })
     .then(res => {
-      var diaries = this.state.diaries
-      var index = diaries.findIndex(diary => diary.id === this.state.modDiaryID)
-      diaries[index].notes = this.state.modDiaryNotes
-      diaries[index].updated_at = new Date().toISOString()
-      this.setState({diaries: diaries})
+      var thoughts = this.state.thoughts
+      var index = thoughts.findIndex(thought => thought.id === this.state.modThoughtID)
+      thoughts[index].notes = this.state.modThoughtNotes
+      thoughts[index].updated_at = new Date().toISOString()
+      this.setState({thoughts: thoughts})
     })
     .catch(error => console.error('Error:', error));
 
   }
 
-  onDiaryDeleteClick = (diary_id) => {
-    var url = getStockApiUrl("diaries") + diary_id
+  onThoughtDeleteClick = (thought_id) => {
+    var url = getStockApiUrl("thoughts") + thought_id
     fetch(url, {
       method: 'DELETE',
       headers:{
@@ -158,24 +158,24 @@ class Edelgard extends React.Component {
       }
     })
     .then(res => {
-      var diaries = this.state.diaries
-      var new_diaries = diaries.filter(diary => diary.id !== diary_id)
-      this.setState({diaries: new_diaries})
+      var thoughts = this.state.thoughts
+      var new_thoughts = thoughts.filter(thought => thought.id !== thought_id)
+      this.setState({thoughts: new_thoughts})
     })
     .catch(error => console.error('Error:', error));
   }
 
-  onEditDiaryNotesChange = (event) => {
-    this.setState({modDiaryNotes: event.target.value});
+  onEditThoughtNotesChange = (event) => {
+    this.setState({modThoughtNotes: event.target.value});
   }
 
   render() {
 
-    const diaries = this.state.diaries
-    var selected = diaries.filter(diary => 
-                  this.props.stock.id === diary.company_id);
+    const thoughts = this.state.thoughts
+    var selected = thoughts.filter(thought => 
+                  this.props.stock.id === thought.company_id);
 
-    // How do you distinguish between diaries not fetched or no diaries
+    // How do you distinguish between thoughts not fetched or no thoughts
     if(selected.length <= 0) {
       return (<div>Loading.....</div>)
     }
@@ -183,25 +183,25 @@ class Edelgard extends React.Component {
     return (
       <div>
         <div className="d-flex justify-content-start align-content-start flex-wrap">
-          {selected.map((diary) => (
+          {selected.map((thought) => (
             <NoteCard
-              key={diary.id}
-              title={diary.title}
-              note={diary.notes}
-              date={diary.updated_at.split('T')[0]}
-              diary_id={diary.id}
+              key={thought.id}
+              title={thought.title}
+              note={thought.notes}
+              date={thought.updated_at.split('T')[0]}
+              thought_id={thought.id}
               onEditClick={this.onToggleClick}
-              onDeleteClick={this.onDiaryDeleteClick}
+              onDeleteClick={this.onThoughtDeleteClick}
             />
           ))}
         </div>
-        <EditDiaryMod
+        <EditThoughtMod
           isOpen={this.state.isModOpen}
           stockName={this.props.stock.symbol}
-          notes={this.state.modDiaryNotes}
-          title={this.state.modDiaryTitle}
-          onNotesChange={this.onEditDiaryNotesChange}
-          onSumbitClick={this.onDiaryEditSumbit}
+          notes={this.state.modThoughtNotes}
+          title={this.state.modThoughtTitle}
+          onNotesChange={this.onEditThoughtNotesChange}
+          onSumbitClick={this.onThoughtEditSumbit}
           onToggleClick={this.onToggleClick}
         />
       </div>
