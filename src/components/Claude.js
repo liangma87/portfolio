@@ -95,7 +95,7 @@ class Claude extends React.Component {
     var url = getStockApiUrl("todos")+ this.state.modTodoID
     fetch(url, {
       method: 'PATCH',
-      body: JSON.stringify({todo: { completion_date: this.state.modTodoDate,
+      body: JSON.stringify({todo: { date: this.state.modTodoDate,
                                     notes: this.state.modTodoNotes}}),
       headers:{
       'Content-Type': 'application/json'
@@ -108,7 +108,7 @@ class Claude extends React.Component {
       var todos = this.state.todos
       var new_todos = todos.map((todo) => {
         if(todo.id === this.state.modTodoID) {
-            todo.completion_date = this.state.modTodoDate
+            todo.date = this.state.modTodoDate
             todo.notes = this.state.modTodoNotes
         }
         return todo    
@@ -119,7 +119,7 @@ class Claude extends React.Component {
 
   }
 
-  onModEditClick = (stock, todo_id, todo_notes, todo_completion_date) => {
+  onModEditClick = (stock, todo_id, todo_notes, todo_date) => {
     this.setState({isModOpen: !this.state.isModOpen})
     if(this.state.isModOpen) {
       return;
@@ -127,7 +127,7 @@ class Claude extends React.Component {
     this.setState({modTodoSym: stock.symbol});
     this.setState({modTodoID: todo_id});
     this.setState({modTodoNotes: todo_notes});
-    this.setState({modTodoDate: todo_completion_date});
+    this.setState({modTodoDate: todo_date});
   }
 
   onModDoneClick = (todo_id) => {
@@ -166,7 +166,7 @@ class Claude extends React.Component {
               stock={stocks.find(stock => stock.id === todo.company_id)}
               id={todo.id}
               notes={todo.notes}
-              date={todo.completion_date}
+              date={todo.date}
               onEditClick={this.onModEditClick}
               onDoneClick={this.onModDoneClick}
             />))}
